@@ -591,6 +591,43 @@ tbody tr:hover{background:#F8FBFE}
   .topbar{align-items:flex-start;flex-direction:column}
   .hero h2{font-size:31px}
 }
+
+
+/* ===== ULTRA PRO ADDITIONS ===== */
+body.dark{
+  --navy:#F7FAFC;--text:#F6F8FB;--muted:#A9B6C4;--bg:#07111F;
+  --card:rgba(13,27,45,.88);--border:#20364C;--shadow:0 18px 50px rgba(0,0,0,.28);
+}
+body.dark{background:radial-gradient(circle at 10% 0%,rgba(11,99,182,.20),transparent 28%),radial-gradient(circle at 100% 10%,rgba(200,16,46,.12),transparent 23%),#07111F}
+body.dark .glass,body.dark .panel,body.dark .table-card{background:rgba(13,27,45,.88)}
+body.dark .field input,body.dark .field select,body.dark .search,body.dark .control-card input,body.dark .control-card select{background:#102235;color:#F7FAFC;border-color:#20364C}
+body.dark tbody tr:hover{background:#102235}
+body.dark tbody td{border-color:#20364C}
+
+.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.top-action{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:13px;padding:10px 11px;box-shadow:0 8px 22px rgba(9,30,66,.07);cursor:pointer;transition:.2s ease}
+.top-action:hover{transform:translateY(-2px)}
+.global-search{min-width:260px;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:13px;padding:10px 12px;outline:none;box-shadow:0 8px 22px rgba(9,30,66,.07)}
+.dropdown{position:relative}.drop-menu{position:absolute;right:0;top:46px;z-index:80;min-width:175px;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow);padding:7px;border-radius:14px;display:none;backdrop-filter:blur(18px)}
+.drop-menu.show{display:block}.drop-menu button{width:100%;text-align:left;border:0;background:transparent;color:var(--text);padding:9px 10px;border-radius:9px;cursor:pointer}.drop-menu button:hover{background:rgba(11,99,182,.08)}
+
+.hero-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.hero-btn{border:0;border-radius:13px;padding:11px 14px;font-weight:800;cursor:pointer;transition:.2s ease}.hero-btn:hover{transform:translateY(-2px)}.hero-btn.white{background:white;color:#06365f}.hero-btn.red{background:linear-gradient(135deg,#C8102E,#FF4966);color:white}.hero-btn.ghost{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);color:white}
+.hero-art{position:absolute;right:2%;bottom:-22px;width:280px;opacity:.16;pointer-events:none}
+
+.quick-actions{display:flex;gap:8px;flex-wrap:wrap;margin:-4px 0 18px}.chip-btn{border:1px solid var(--border);background:var(--card);color:var(--text);padding:8px 11px;border-radius:999px;font-size:11px;cursor:pointer;box-shadow:0 6px 18px rgba(9,30,66,.06)}.chip-btn:hover,.chip-btn.active{background:#0B63B6;color:white;border-color:#0B63B6}
+
+.pro-section{margin-top:18px}.pro-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:16px}.mini-card{border-radius:22px;padding:17px;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow);backdrop-filter:blur(18px)}.mini-card h3{font-size:14px;margin:0 0 12px}.mini-chart-wrap{height:245px;position:relative}
+.rank-list{display:flex;flex-direction:column;gap:9px}.rank-item{display:grid;grid-template-columns:28px 1fr auto;gap:9px;align-items:center;padding:10px;border-radius:13px;background:rgba(11,99,182,.055)}.rank-no{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#EAF3FB;color:#0B63B6;font-weight:900}.rank-item:first-child .rank-no{background:#FDECEF;color:#C8102E}.rank-item strong{font-size:11px}.rank-item small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.rank-value{font-size:11px;font-weight:900}
+
+.alert-list{display:flex;flex-direction:column;gap:9px}.alert-box{display:flex;gap:10px;padding:11px;border-radius:14px;background:rgba(11,99,182,.055)}.alert-icon{width:31px;height:31px;border-radius:10px;display:grid;place-items:center;background:#EAF3FB}.alert-box.warn .alert-icon{background:#FFF1D6}.alert-box.bad .alert-icon{background:#FDECEF}.alert-box strong{font-size:11px}.alert-box p{margin:3px 0 0;font-size:9px;color:var(--muted);line-height:1.4}
+
+.about-panel{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.about-copy,.vars-card{border-radius:22px;padding:20px;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow)}.about-copy h3,.vars-card h3{margin:0 0 10px;font-size:16px}.about-copy p{font-size:11px;color:var(--muted);line-height:1.7}.vars-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.var-pill{padding:9px;border-radius:11px;background:rgba(11,99,182,.06);font-size:9px}.var-pill b{display:block;font-size:10px;margin-bottom:2px}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(3,12,22,.56);display:none;align-items:center;justify-content:center;z-index:999;padding:18px}.modal-overlay.show{display:flex}.modal-box{width:min(620px,96vw);max-height:85vh;overflow:auto;border-radius:24px;background:var(--card);border:1px solid var(--border);padding:20px;box-shadow:0 28px 90px rgba(0,0,0,.28)}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head h3{margin:0}.modal-close{border:0;background:rgba(11,99,182,.08);color:var(--text);width:35px;height:35px;border-radius:10px;cursor:pointer}.modal-box p{font-size:11px;color:var(--muted);line-height:1.6}
+.toast-pro{position:fixed;right:20px;bottom:20px;z-index:1000;background:#07111F;color:white;border-radius:13px;padding:11px 13px;box-shadow:0 18px 42px rgba(0,0,0,.24);font-size:11px;transform:translateY(18px);opacity:0;pointer-events:none;transition:.25s}.toast-pro.show{transform:none;opacity:1}
+
+@media(max-width:1250px){.pro-grid{grid-template-columns:1fr 1fr}.pro-grid>:last-child{grid-column:1/-1}}@media(max-width:900px){.top-actions{width:100%}.global-search{width:100%;min-width:0}.pro-grid,.about-panel{grid-template-columns:1fr}.hero-art{display:none}}
+
 </style>
 </head>
 <body>
@@ -608,8 +645,11 @@ tbody tr:hover{background:#F8FBFE}
     <nav class="menu">
       <a class="active" href="#inicio"><span class="dot"></span>Overview</a>
       <a href="#analitica"><span class="dot"></span>Analytics</a>
+      <a href="#advanced"><span class="dot"></span>Advanced</a>
+      <a href="#logistica"><span class="dot"></span>Logística</a>
       <a href="#insights"><span class="dot"></span>Insights</a>
       <a href="#datos"><span class="dot"></span>Data Explorer</a>
+      <a href="#about"><span class="dot"></span>Acerca del proyecto</a>
     </nav>
 
     <div class="side-card">
@@ -637,10 +677,13 @@ tbody tr:hover{background:#F8FBFE}
         <div>
           <div class="eyebrow">⚙ Ingeniería Industrial · Data Driven</div>
           <h2>Convierte datos de ventas en decisiones que sí sirven.</h2>
-          <p>
-            Explora el rendimiento comercial, comportamiento del cliente y tiempos de entrega
-            a partir de la base de datos de e-commerce.
-          </p>
+          <p data-es="Explora el rendimiento comercial, comportamiento del cliente y tiempos de entrega a partir de la base de datos de e-commerce." data-en="Explore commercial performance, customer behavior and delivery times using the e-commerce dataset.">Explora el rendimiento comercial, comportamiento del cliente y tiempos de entrega a partir de la base de datos de e-commerce.</p>
+          <div class="hero-actions">
+            <button class="hero-btn white" onclick="document.querySelector('#analitica').scrollIntoView({behavior:'smooth'})" data-es="Explorar dashboard" data-en="Explore dashboard">Explorar dashboard</button>
+            <button class="hero-btn red" onclick="document.querySelector('#datos').scrollIntoView({behavior:'smooth'})" data-es="Ver dataset" data-en="View dataset">Ver dataset</button>
+            <button class="hero-btn ghost" id="aboutBtn" data-es="Acerca del proyecto" data-en="About project">Acerca del proyecto</button>
+          </div>
+          <svg class="hero-art" viewBox="0 0 300 230" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="34" y="35" width="220" height="140" rx="24" fill="white"/><rect x="55" y="57" width="88" height="8" rx="4" fill="#0B63B6"/><rect x="55" y="78" width="164" height="4" rx="2" fill="#B7D5EE"/><rect x="55" y="92" width="132" height="4" rx="2" fill="#B7D5EE"/><rect x="55" y="122" width="22" height="31" rx="6" fill="#0B63B6"/><rect x="86" y="108" width="22" height="45" rx="6" fill="#C8102E"/><rect x="117" y="96" width="22" height="57" rx="6" fill="#0B63B6"/><rect x="148" y="115" width="22" height="38" rx="6" fill="#C8102E"/><rect x="179" y="83" width="22" height="70" rx="6" fill="#0B63B6"/></svg>
         </div>
 
         <div class="hero-panel">
@@ -692,6 +735,15 @@ tbody tr:hover{background:#F8FBFE}
         <input id="dateTo" type="date">
       </div>
     </section>
+
+    <div class="quick-actions">
+      <button class="chip-btn active" data-range="all">Todo el periodo</button>
+      <button class="chip-btn" data-range="30">30 días</button>
+      <button class="chip-btn" data-range="90">90 días</button>
+      <button class="chip-btn" data-range="180">180 días</button>
+      <button class="chip-btn" id="resetAllBtn">↻ Restablecer</button>
+      <button class="chip-btn" id="exportCsvBtn">⇩ Exportar CSV</button>
+    </div>
 
     <section class="kpis">
       <div class="kpi glass">
@@ -799,6 +851,62 @@ tbody tr:hover{background:#F8FBFE}
       </div>
     </section>
 
+
+    <section id="advanced" class="pro-section">
+      <div class="pro-grid">
+        <div class="mini-card">
+          <h3>Revenue vs Discount</h3>
+          <div class="mini-chart-wrap"><canvas id="scatterChart"></canvas></div>
+        </div>
+        <div class="mini-card">
+          <h3 data-es="Rating por categoría" data-en="Rating by category">Rating por categoría</h3>
+          <div class="mini-chart-wrap"><canvas id="ratingCategoryChart"></canvas></div>
+        </div>
+        <div class="mini-card">
+          <h3 data-es="Top categorías" data-en="Top categories">Top categorías</h3>
+          <div class="rank-list" id="categoryRanking"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="logistica" class="pro-section">
+      <div class="pro-grid">
+        <div class="mini-card">
+          <h3 data-es="Lead time por región" data-en="Lead time by region">Lead time por región</h3>
+          <div class="mini-chart-wrap"><canvas id="deliveryRegionChart"></canvas></div>
+        </div>
+        <div class="mini-card">
+          <h3 data-es="Cantidad vendida por categoría" data-en="Quantity sold by category">Cantidad vendida por categoría</h3>
+          <div class="mini-chart-wrap"><canvas id="quantityChart"></canvas></div>
+        </div>
+        <div class="mini-card">
+          <h3 data-es="Alertas operativas" data-en="Operational alerts">Alertas operativas</h3>
+          <div class="alert-list" id="alertList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="pro-section">
+      <div class="about-panel">
+        <div class="about-copy">
+          <h3 data-es="E-Commerce Intelligence Platform" data-en="E-Commerce Intelligence Platform">E-Commerce Intelligence Platform</h3>
+          <p data-es="Esta plataforma analiza 5.000 registros de comercio electrónico para convertir datos comerciales y operativos en información útil para la toma de decisiones. Integra ventas, clientes, regiones, métodos de pago, descuentos, satisfacción y lead time, conectando el análisis con aplicaciones de Ingeniería Industrial." data-en="This platform analyzes 5,000 e-commerce records to turn commercial and operational data into useful decision-making information. It integrates sales, customers, regions, payment methods, discounts, satisfaction and lead time with Industrial Engineering applications.">Esta plataforma analiza 5.000 registros de comercio electrónico para convertir datos comerciales y operativos en información útil para la toma de decisiones. Integra ventas, clientes, regiones, métodos de pago, descuentos, satisfacción y lead time, conectando el análisis con aplicaciones de Ingeniería Industrial.</p>
+          <p><b>Universidad de Cuenca · Ingeniería Industrial · 2026</b></p>
+        </div>
+        <div class="vars-card">
+          <h3 data-es="Variables principales" data-en="Main variables">Variables principales</h3>
+          <div class="vars-grid">
+            <div class="var-pill"><b>order_id</b>Pedido</div><div class="var-pill"><b>order_date</b>Fecha</div>
+            <div class="var-pill"><b>customer_id</b>Cliente</div><div class="var-pill"><b>product_category</b>Categoría</div>
+            <div class="var-pill"><b>region</b>Región</div><div class="var-pill"><b>quantity</b>Cantidad</div>
+            <div class="var-pill"><b>unit_price</b>Precio</div><div class="var-pill"><b>discount</b>Descuento</div>
+            <div class="var-pill"><b>payment_method</b>Pago</div><div class="var-pill"><b>delivery_days</b>Entrega</div>
+            <div class="var-pill"><b>customer_rating</b>Rating</div><div class="var-pill"><b>revenue</b>Revenue</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="insights" class="insights">
       <div class="insight-lead">
         <h3>Smart Insights</h3>
@@ -814,7 +922,7 @@ tbody tr:hover{background:#F8FBFE}
     <section id="datos" class="table-card glass">
       <div class="table-actions">
         <h3>Data Explorer</h3>
-        <input id="tableSearch" class="search" placeholder="Buscar pedido, región, categoría...">
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="tableSearch" class="search" placeholder="Buscar pedido, región, categoría..."><button class="btn btn-primary" id="exportCsvBtn2">⇩ CSV</button></div>
       </div>
 
       <div class="table-wrap">
@@ -846,7 +954,11 @@ tbody tr:hover{background:#F8FBFE}
   </main>
 </div>
 
+<div class="modal-overlay" id="aboutModal"><div class="modal-box"><div class="modal-head"><h3>E-Commerce Intelligence Platform</h3><button class="modal-close" id="closeModal">✕</button></div><p>Dashboard interactivo desarrollado para analizar la base de ventas de comercio electrónico mediante indicadores comerciales, experiencia del cliente y desempeño logístico.</p><p>Incluye filtros, KPIs, rankings, visualizaciones, alertas operativas, exportación CSV, búsqueda global, modo oscuro e interfaz bilingüe.</p><p><b>Universidad de Cuenca · Ingeniería Industrial · 2026</b></p></div></div>
+<div class="toast-pro" id="toastPro">✅ Acción completada</div>
+
 <script>
+let currentLang = 'es';
 let rawData = [];
 let filteredData = [];
 let charts = {};
@@ -1209,6 +1321,118 @@ $('csvInput').addEventListener('change',e=>{
 .forEach(id=>$(id).addEventListener('change',applyFilters));
 
 $('tableSearch').addEventListener('input',updateTable);
+
+
+
+function showToast(msg){
+  const t=$('toastPro'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1700);
+}
+
+function setLanguage(lang){
+  currentLang=lang;
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-es][data-en]').forEach(el=>{
+    el.textContent=el.getAttribute('data-'+lang);
+  });
+  $('langBtn').textContent=lang==='es'?'🌐 ES ▾':'🌐 EN ▾';
+  $('globalSearch').placeholder=lang==='es'?'Buscar categoría, región, pedido...':'Search category, region, order...';
+  $('tableSearch').placeholder=lang==='es'?'Buscar pedido, región, categoría...':'Search order, region, category...';
+  updateDashboard();
+  updateProSections();
+}
+
+function exportFilteredCSV(){
+  if(!filteredData.length){showToast(currentLang==='es'?'No hay datos para exportar':'No data to export');return;}
+  const clean=filteredData.map(({_date,...r})=>r);
+  const csv=Papa.unparse(clean);
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='ecommerce_filtrado.csv';a.click();
+  URL.revokeObjectURL(url);
+  showToast(currentLang==='es'?'✅ CSV exportado':'✅ CSV exported');
+}
+
+function updateProSections(){
+  // Revenue vs discount
+  destroyChart('scatter');
+  charts.scatter=new Chart($('scatterChart'),{
+    type:'scatter',
+    data:{datasets:[{data:filteredData.slice(0,900).map(r=>({x:r.discount*100,y:r.revenue})),backgroundColor:'rgba(11,99,182,.45)',pointRadius:3}]},
+    options:{...baseOptions(),plugins:{...baseOptions().plugins,legend:{display:false}},scales:{x:{title:{display:true,text:'Discount %'},grid:{display:false}},y:{title:{display:true,text:'Revenue'},grid:{color:'rgba(16,36,58,.07)'}}}}
+  });
+
+  const rating=filteredData.reduce((a,r)=>{const k=r.product_category||'Sin dato';if(!a[k])a[k]={s:0,n:0};a[k].s+=r.customer_rating;a[k].n++;return a;},{});
+  const ratingAvg=Object.fromEntries(Object.entries(rating).map(([k,v])=>[k,v.s/v.n]));
+  destroyChart('ratingCat');
+  charts.ratingCat=new Chart($('ratingCategoryChart'),{
+    type:'bar',data:{labels:Object.keys(ratingAvg),datasets:[{data:Object.values(ratingAvg),backgroundColor:'#0B63B6',borderRadius:8}]},
+    options:{...baseOptions(),plugins:{...baseOptions().plugins,legend:{display:false}},scales:{x:{grid:{display:false}},y:{min:0,max:5}}}
+  });
+
+  const cats=Object.entries(groupSum(filteredData,'product_category')).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  $('categoryRanking').innerHTML=cats.map((x,i)=>`<div class="rank-item"><div class="rank-no">${i+1}</div><div><strong>${escapeHtml(x[0])}</strong><small>Revenue</small></div><div class="rank-value">${money(x[1])}</div></div>`).join('');
+
+  const regAcc={};
+  filteredData.forEach(r=>{const k=r.region||'Sin dato';if(!regAcc[k])regAcc[k]={s:0,n:0};regAcc[k].s+=r.delivery_days;regAcc[k].n++;});
+  const regAvg=Object.fromEntries(Object.entries(regAcc).map(([k,v])=>[k,v.s/v.n]));
+  destroyChart('deliveryRegion');
+  charts.deliveryRegion=new Chart($('deliveryRegionChart'),{
+    type:'bar',data:{labels:Object.keys(regAvg),datasets:[{data:Object.values(regAvg),backgroundColor:'#C8102E',borderRadius:8}]},
+    options:{...baseOptions(),plugins:{...baseOptions().plugins,legend:{display:false}}}
+  });
+
+  const qty=groupSum(filteredData,'product_category','quantity');
+  destroyChart('qty');
+  charts.qty=new Chart($('quantityChart'),{
+    type:'bar',data:{labels:Object.keys(qty),datasets:[{data:Object.values(qty),backgroundColor:'#3A8DDE',borderRadius:8}]},
+    options:{...baseOptions(),plugins:{...baseOptions().plugins,legend:{display:false}}}
+  });
+
+  const overall=filteredData.length?filteredData.reduce((s,r)=>s+r.delivery_days,0)/filteredData.length:0;
+  const ratingAll=filteredData.length?filteredData.reduce((s,r)=>s+r.customer_rating,0)/filteredData.length:0;
+  const ordered=Object.entries(regAvg).sort((a,b)=>b[1]-a[1]);
+  const slow=ordered[0]||['—',0]; const fast=ordered.at(-1)||['—',0];
+  $('alertList').innerHTML=`
+    <div class="alert-box ${overall>7?'warn':''}"><div class="alert-icon">${overall>7?'⚠':'✓'}</div><div><strong>${currentLang==='es'?'Lead time general':'Overall lead time'}: ${overall.toFixed(1)} d</strong><p>${currentLang==='es'?'Promedio operativo del filtro actual.':'Current filter operational average.'}</p></div></div>
+    <div class="alert-box warn"><div class="alert-icon">!</div><div><strong>${currentLang==='es'?'Región más lenta':'Slowest region'}: ${escapeHtml(slow[0])}</strong><p>${slow[1].toFixed(1)} d</p></div></div>
+    <div class="alert-box"><div class="alert-icon">★</div><div><strong>${currentLang==='es'?'Región más rápida':'Fastest region'}: ${escapeHtml(fast[0])}</strong><p>${fast[1].toFixed(1)} d</p></div></div>
+    <div class="alert-box ${ratingAll<3?'bad':''}"><div class="alert-icon">☺</div><div><strong>Rating ${ratingAll.toFixed(2)}/5</strong><p>${currentLang==='es'?'Satisfacción media del cliente.':'Average customer satisfaction.'}</p></div></div>`;
+}
+
+function setQuickRange(days){
+  document.querySelectorAll('[data-range]').forEach(b=>b.classList.toggle('active',b.dataset.range===String(days)));
+  if(days==='all'){$('dateFrom').value='';$('dateTo').value='';applyFilters();return;}
+  const dates=rawData.map(r=>r._date).filter(Boolean).sort((a,b)=>a-b);if(!dates.length)return;
+  const max=dates.at(-1),min=new Date(max);min.setDate(min.getDate()-Number(days));
+  $('dateFrom').value=min.toISOString().slice(0,10);$('dateTo').value=max.toISOString().slice(0,10);applyFilters();
+}
+
+// Enhance original update function
+const originalUpdateDashboard=updateDashboard;
+updateDashboard=function(){originalUpdateDashboard();updateProSections();};
+
+$('globalSearch').addEventListener('input',()=>{
+  const q=$('globalSearch').value.toLowerCase().trim();
+  const c=$('categoryFilter').value,r=$('regionFilter').value,p=$('paymentFilter').value;
+  const from=$('dateFrom').value?new Date($('dateFrom').value+'T00:00:00'):null;
+  const to=$('dateTo').value?new Date($('dateTo').value+'T23:59:59'):null;
+  filteredData=rawData.filter(x=>{
+    const hit=!q||[x.order_id,x.customer_id,x.product_category,x.region,x.payment_method].some(v=>String(v).toLowerCase().includes(q));
+    return hit&&(!c||x.product_category===c)&&(!r||x.region===r)&&(!p||x.payment_method===p)&&(!from||(x._date&&x._date>=from))&&(!to||(x._date&&x._date<=to));
+  }); updateDashboard();
+});
+
+document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',()=>setQuickRange(b.dataset.range)));
+$('resetAllBtn').addEventListener('click',()=>{$('categoryFilter').value='';$('regionFilter').value='';$('paymentFilter').value='';$('dateFrom').value='';$('dateTo').value='';$('globalSearch').value='';$('tableSearch').value='';filteredData=[...rawData];updateDashboard();showToast(currentLang==='es'?'Filtros restablecidos':'Filters reset');});
+$('exportCsvBtn').addEventListener('click',exportFilteredCSV);$('exportCsvBtn2').addEventListener('click',exportFilteredCSV);
+$('themeBtn').addEventListener('click',()=>{document.body.classList.toggle('dark');$('themeBtn').textContent=document.body.classList.contains('dark')?'☀️':'🌙';updateDashboard();});
+function toggleDrop(id){document.querySelectorAll('.drop-menu').forEach(m=>{if(m.id!==id)m.classList.remove('show')});$(id).classList.toggle('show')}
+$('langBtn').addEventListener('click',()=>toggleDrop('langMenu'));$('notifBtn').addEventListener('click',()=>toggleDrop('notifMenu'));$('profileBtn').addEventListener('click',()=>toggleDrop('profileMenu'));
+document.querySelectorAll('[data-language]').forEach(b=>b.addEventListener('click',()=>{setLanguage(b.dataset.language);$('langMenu').classList.remove('show')}));
+$('settingsBtn').addEventListener('click',()=>showToast(currentLang==='es'?'⚙ Usa idioma y modo oscuro desde la barra superior':'⚙ Use language and dark mode from the top bar'));
+$('aboutBtn').addEventListener('click',()=>$('aboutModal').classList.add('show'));$('closeModal').addEventListener('click',()=>$('aboutModal').classList.remove('show'));$('aboutModal').addEventListener('click',e=>{if(e.target===$('aboutModal'))$('aboutModal').classList.remove('show')});
+document.addEventListener('click',e=>{if(!e.target.closest('.dropdown'))document.querySelectorAll('.drop-menu').forEach(m=>m.classList.remove('show'))});
 
 fetch('ecommerce_sales_analytics_5000.csv')
 .then(r=>{
