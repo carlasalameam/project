@@ -628,6 +628,20 @@ body.dark tbody td{border-color:#20364C}
 
 @media(max-width:1250px){.pro-grid{grid-template-columns:1fr 1fr}.pro-grid>:last-child{grid-column:1/-1}}@media(max-width:900px){.top-actions{width:100%}.global-search{width:100%;min-width:0}.pro-grid,.about-panel{grid-template-columns:1fr}.hero-art{display:none}}
 
+
+.menu a.active{
+  background:rgba(255,255,255,.12)!important;
+  color:#fff!important;
+}
+.topbar{
+  align-items:flex-start;
+}
+@media(max-width:1250px){
+  .topbar{flex-direction:column}
+  .top-actions{width:100%}
+  .global-search{flex:1;min-width:220px}
+}
+
 </style>
 </head>
 <body>
@@ -643,13 +657,13 @@ body.dark tbody td{border-color:#20364C}
 
     <div class="menu-label">Workspace</div>
     <nav class="menu">
-      <a class="active" href="#inicio"><span class="dot"></span>Overview</a>
-      <a href="#analitica"><span class="dot"></span>Analytics</a>
-      <a href="#advanced"><span class="dot"></span>Advanced</a>
-      <a href="#logistica"><span class="dot"></span>Logística</a>
-      <a href="#insights"><span class="dot"></span>Insights</a>
-      <a href="#datos"><span class="dot"></span>Data Explorer</a>
-      <a href="#about"><span class="dot"></span>Acerca del proyecto</a>
+      <a class="active" href="#inicio" data-es="Overview" data-en="Overview"><span class="dot"></span><span>Overview</span></a>
+      <a href="#analitica" data-es="Analytics" data-en="Analytics"><span class="dot"></span><span>Analytics</span></a>
+      <a href="#advanced" data-es="Advanced" data-en="Advanced"><span class="dot"></span><span>Advanced</span></a>
+      <a href="#logistica" data-es="Logística" data-en="Logistics"><span class="dot"></span><span>Logística</span></a>
+      <a href="#insights" data-es="Insights" data-en="Insights"><span class="dot"></span><span>Insights</span></a>
+      <a href="#datos" data-es="Data Explorer" data-en="Data Explorer"><span class="dot"></span><span>Data Explorer</span></a>
+      <a href="#about" data-es="Acerca del proyecto" data-en="About project"><span class="dot"></span><span>Acerca del proyecto</span></a>
     </nav>
 
     <div class="side-card">
@@ -665,11 +679,53 @@ body.dark tbody td{border-color:#20364C}
       <div class="hello">
         <div class="hello-icon">📊</div>
         <div>
-          <h1>Dashboard E-Commerce</h1>
-          <p>Ventas, clientes y eficiencia operativa en una sola vista.</p>
+          <h1 data-es="Dashboard E-Commerce" data-en="E-Commerce Dashboard">Dashboard E-Commerce</h1>
+          <p data-es="Ventas, clientes y eficiencia operativa en una sola vista."
+             data-en="Sales, customers and operational efficiency in one view.">
+             Ventas, clientes y eficiencia operativa en una sola vista.
+          </p>
         </div>
       </div>
-      <div class="status-pill"><span></span><span id="dataStatus">Esperando datos</span></div>
+
+      <div class="top-actions">
+        <input id="globalSearch" class="global-search"
+          placeholder="Buscar categoría, región o pedido..."
+          data-placeholder-es="Buscar categoría, región o pedido..."
+          data-placeholder-en="Search category, region or order...">
+
+        <div class="dropdown">
+          <button class="top-action" id="langBtn">🌐 ES ▾</button>
+          <div class="drop-menu" id="langMenu">
+            <button data-language="es">🇪🇨 Español</button>
+            <button data-language="en">🇺🇸 English</button>
+          </div>
+        </div>
+
+        <button class="top-action" id="themeBtn" title="Cambiar modo">🌙</button>
+
+        <div class="dropdown">
+          <button class="top-action" id="notifBtn">🔔</button>
+          <div class="drop-menu" id="notifMenu">
+            <button data-es="✅ Dataset listo para analizar" data-en="✅ Dataset ready to analyze">✅ Dataset listo para analizar</button>
+            <button data-es="📊 Dashboard actualizado" data-en="📊 Dashboard updated">📊 Dashboard actualizado</button>
+            <button data-es="⚠ Revisa tiempos de entrega" data-en="⚠ Review delivery times">⚠ Revisa tiempos de entrega</button>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <button class="top-action" id="profileBtn">👤 JD ▾</button>
+          <div class="drop-menu" id="profileMenu">
+            <button><b>José David</b></button>
+            <button id="profileAbout" data-es="ℹ Acerca del proyecto" data-en="ℹ About the project">ℹ Acerca del proyecto</button>
+            <button id="profileSettings" data-es="⚙ Configuración" data-en="⚙ Settings">⚙ Configuración</button>
+          </div>
+        </div>
+
+        <div class="status-pill">
+          <span></span>
+          <span id="dataStatus">Esperando datos</span>
+        </div>
+      </div>
     </div>
 
     <section id="inicio" class="hero">
@@ -1332,14 +1388,26 @@ function showToast(msg){
 function setLanguage(lang){
   currentLang=lang;
   document.documentElement.lang=lang;
+
   document.querySelectorAll('[data-es][data-en]').forEach(el=>{
-    el.textContent=el.getAttribute('data-'+lang);
+    const value=lang==='es'?el.dataset.es:el.dataset.en;
+
+    if(el.matches('.menu a')){
+      const label=el.querySelector('span:last-child');
+      if(label) label.textContent=value;
+    }else{
+      el.textContent=value;
+    }
   });
-  $('langBtn').textContent=lang==='es'?'🌐 ES ▾':'🌐 EN ▾';
-  $('globalSearch').placeholder=lang==='es'?'Buscar categoría, región, pedido...':'Search category, region, order...';
-  $('tableSearch').placeholder=lang==='es'?'Buscar pedido, región, categoría...':'Search order, region, category...';
-  updateDashboard();
-  updateProSections();
+
+  document.querySelectorAll('[data-placeholder-es][data-placeholder-en]').forEach(el=>{
+    el.placeholder=lang==='es'?el.dataset.placeholderEs:el.dataset.placeholderEn;
+  });
+
+  const langBtn=document.getElementById('langBtn');
+  if(langBtn) langBtn.textContent=lang==='es'?'🌐 ES ▾':'🌐 EN ▾';
+
+  try{ updateDashboard(); }catch(e){}
 }
 
 function exportFilteredCSV(){
@@ -1426,26 +1494,194 @@ $('globalSearch').addEventListener('input',()=>{
 document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',()=>setQuickRange(b.dataset.range)));
 $('resetAllBtn').addEventListener('click',()=>{$('categoryFilter').value='';$('regionFilter').value='';$('paymentFilter').value='';$('dateFrom').value='';$('dateTo').value='';$('globalSearch').value='';$('tableSearch').value='';filteredData=[...rawData];updateDashboard();showToast(currentLang==='es'?'Filtros restablecidos':'Filters reset');});
 $('exportCsvBtn').addEventListener('click',exportFilteredCSV);$('exportCsvBtn2').addEventListener('click',exportFilteredCSV);
-$('themeBtn').addEventListener('click',()=>{document.body.classList.toggle('dark');$('themeBtn').textContent=document.body.classList.contains('dark')?'☀️':'🌙';updateDashboard();});
-function toggleDrop(id){document.querySelectorAll('.drop-menu').forEach(m=>{if(m.id!==id)m.classList.remove('show')});$(id).classList.toggle('show')}
-$('langBtn').addEventListener('click',()=>toggleDrop('langMenu'));$('notifBtn').addEventListener('click',()=>toggleDrop('notifMenu'));$('profileBtn').addEventListener('click',()=>toggleDrop('profileMenu'));
-document.querySelectorAll('[data-language]').forEach(b=>b.addEventListener('click',()=>{setLanguage(b.dataset.language);$('langMenu').classList.remove('show')}));
-$('settingsBtn').addEventListener('click',()=>showToast(currentLang==='es'?'⚙ Usa idioma y modo oscuro desde la barra superior':'⚙ Use language and dark mode from the top bar'));
-$('aboutBtn').addEventListener('click',()=>$('aboutModal').classList.add('show'));$('closeModal').addEventListener('click',()=>$('aboutModal').classList.remove('show'));$('aboutModal').addEventListener('click',e=>{if(e.target===$('aboutModal'))$('aboutModal').classList.remove('show')});
-document.addEventListener('click',e=>{if(!e.target.closest('.dropdown'))document.querySelectorAll('.drop-menu').forEach(m=>m.classList.remove('show'))});
+
+function byId(id){ return document.getElementById(id); }
+
+function safeOn(id,event,handler){
+  const el=byId(id);
+  if(el) el.addEventListener(event,handler);
+}
+
+function toggleDrop(id){
+  const menu=byId(id);
+  if(!menu) return;
+  document.querySelectorAll('.drop-menu').forEach(m=>{
+    if(m.id!==id) m.classList.remove('show');
+  });
+  menu.classList.toggle('show');
+}
+
+function refreshThemeCharts(){
+  try{ updateDashboard(); }catch(e){}
+  try{ updateAdvanced(); }catch(e){}
+  try{ updateLogistics(); }catch(e){}
+}
+
+safeOn('themeBtn','click',()=>{
+  document.body.classList.toggle('dark');
+  const btn=byId('themeBtn');
+  if(btn) btn.textContent=document.body.classList.contains('dark')?'☀️':'🌙';
+  localStorage.setItem('ucuenTheme',document.body.classList.contains('dark')?'dark':'light');
+  refreshThemeCharts();
+});
+
+safeOn('langBtn','click',e=>{
+  e.stopPropagation();
+  toggleDrop('langMenu');
+});
+safeOn('notifBtn','click',e=>{
+  e.stopPropagation();
+  toggleDrop('notifMenu');
+});
+safeOn('profileBtn','click',e=>{
+  e.stopPropagation();
+  toggleDrop('profileMenu');
+});
+
+document.querySelectorAll('[data-language]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    setLanguage(btn.dataset.language);
+    const menu=byId('langMenu');
+    if(menu) menu.classList.remove('show');
+    localStorage.setItem('ucuenLang',btn.dataset.language);
+  });
+});
+
+safeOn('profileAbout','click',()=>{
+  const menu=byId('profileMenu');
+  if(menu) menu.classList.remove('show');
+  const target=document.querySelector('#about');
+  if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+safeOn('profileSettings','click',()=>{
+  const menu=byId('profileMenu');
+  if(menu) menu.classList.remove('show');
+  if(typeof showToast==='function'){
+    showToast(currentLang==='es'?'⚙ Usa 🌙 para modo oscuro y 🌐 para idioma':'⚙ Use 🌙 for dark mode and 🌐 for language');
+  }
+});
+
+safeOn('globalSearch','input',()=>{
+  if(typeof applyFilters==='function') applyFilters();
+});
+
+document.querySelectorAll('.menu a').forEach(link=>{
+  link.addEventListener('click',e=>{
+    e.preventDefault();
+    document.querySelectorAll('.menu a').forEach(a=>a.classList.remove('active'));
+    link.classList.add('active');
+    const target=document.querySelector(link.getAttribute('href'));
+    if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+const observerSections=[...document.querySelectorAll('section[id]')];
+if('IntersectionObserver' in window){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const link=document.querySelector(`.menu a[href="#${entry.target.id}"]`);
+        if(link){
+          document.querySelectorAll('.menu a').forEach(a=>a.classList.remove('active'));
+          link.classList.add('active');
+        }
+      }
+    });
+  },{rootMargin:'-35% 0px -55% 0px',threshold:0});
+  observerSections.forEach(s=>obs.observe(s));
+}
+
+safeOn('aboutBtn','click',()=>byId('aboutModal')?.classList.add('show'));
+safeOn('closeModal','click',()=>byId('aboutModal')?.classList.remove('show'));
+safeOn('aboutModal','click',e=>{
+  if(e.target===byId('aboutModal')) byId('aboutModal').classList.remove('show');
+});
+
+safeOn('resetAllBtn','click',()=>{
+  if(byId('categoryFilter')) byId('categoryFilter').value='';
+  if(byId('regionFilter')) byId('regionFilter').value='';
+  if(byId('paymentFilter')) byId('paymentFilter').value='';
+  if(byId('dateFrom')) byId('dateFrom').value='';
+  if(byId('dateTo')) byId('dateTo').value='';
+  if(byId('globalSearch')) byId('globalSearch').value='';
+  if(byId('tableSearch')) byId('tableSearch').value='';
+  filteredData=[...rawData];
+  try{ updateDashboard(); }catch(e){}
+  document.querySelectorAll('.chip-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.chip-btn[data-range="all"]')?.classList.add('active');
+  if(typeof showToast==='function') showToast(currentLang==='es'?'↻ Filtros restablecidos':'↻ Filters reset');
+});
+
+document.querySelectorAll('.chip-btn[data-range]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.chip-btn[data-range]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const range=btn.dataset.range;
+    if(range==='all'){
+      if(byId('dateFrom')) byId('dateFrom').value='';
+      if(byId('dateTo')) byId('dateTo').value='';
+    }else{
+      const dates=rawData.map(x=>x._date).filter(Boolean).sort((a,b)=>a-b);
+      if(dates.length){
+        const max=new Date(dates.at(-1));
+        const min=new Date(max);
+        min.setDate(min.getDate()-Number(range));
+        if(byId('dateFrom')) byId('dateFrom').value=min.toISOString().slice(0,10);
+        if(byId('dateTo')) byId('dateTo').value=max.toISOString().slice(0,10);
+      }
+    }
+    if(typeof applyFilters==='function') applyFilters();
+  });
+});
+
+function exportFilteredCSV(){
+  if(!filteredData.length){
+    if(typeof showToast==='function') showToast(currentLang==='es'?'No hay datos para exportar':'No data to export');
+    return;
+  }
+  const clean=filteredData.map(({_date,...rest})=>rest);
+  const csv=Papa.unparse(clean);
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='ecommerce_filtrado.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  if(typeof showToast==='function') showToast(currentLang==='es'?'✅ CSV exportado':'✅ CSV exported');
+}
+
+safeOn('exportCsvBtn','click',exportFilteredCSV);
+safeOn('exportCsvBtn2','click',exportFilteredCSV);
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.dropdown')){
+    document.querySelectorAll('.drop-menu').forEach(m=>m.classList.remove('show'));
+  }
+});
+
+const savedTheme=localStorage.getItem('ucuenTheme');
+if(savedTheme==='dark'){
+  document.body.classList.add('dark');
+  if(byId('themeBtn')) byId('themeBtn').textContent='☀️';
+}
+
+const savedLang=localStorage.getItem('ucuenLang');
+if(savedLang==='en') setLanguage('en');
 
 fetch('ecommerce_sales_analytics_5000.csv')
-.then(r=>{
-  if(!r.ok)throw new Error();
-  return r.text();
-})
-.then(text=>{
-  const parsed=Papa.parse(text,{header:true,dynamicTyping:true,skipEmptyLines:true});
-  initData(parsed.data);
-})
-.catch(()=>{
-  $('dataStatus').textContent='Selecciona tu CSV';
-});
+  .then(r=>{if(!r.ok) throw new Error(); return r.text();})
+  .then(text=>{
+    const result=Papa.parse(text,{header:true,dynamicTyping:true,skipEmptyLines:true});
+    initData(result.data);
+  })
+  .catch(()=>{
+    const status=byId('dataStatus');
+    if(status) status.textContent=currentLang==='es'?'Selecciona tu CSV':'Select your CSV';
+  });
 </script>
 </body>
 </html>
