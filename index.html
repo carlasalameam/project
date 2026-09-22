@@ -1,767 +1,737 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UCuenca Industrial Analytics</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UCuenca Industrial Analytics & Quality Control</title>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Librerías requeridas -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 
-<style>
-:root{
-  --uc-blue:#003B71;
-  --uc-blue-2:#0B63B6;
-  --uc-blue-3:#3A8DDE;
-  --uc-red:#C8102E;
-  --uc-red-2:#FF3B5C;
-  --navy:#07111F;
-  --text:#101828;
-  --muted:#667085;
-  --soft:#EEF4F9;
-  --card:rgba(255,255,255,.78);
-  --border:rgba(255,255,255,.55);
-  --shadow:0 20px 60px rgba(11,32,55,.12);
-}
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at 10% 0%, rgba(58,141,222,.15), transparent 30%), radial-gradient(circle at 100% 10%, rgba(200,16,46,.12), transparent 25%), linear-gradient(180deg,#F8FBFE 0%,#F2F6FA 100%);
+      --text: #101828;
+      --muted: #667085;
+      --card: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(255, 255, 255, 0.65);
+      --border: #E4EBF2;
+      --sidebar-bg: linear-gradient(180deg, #063B6A 0%, #041F38 60%, #07111F 100%);
+      --sidebar-card: rgba(255, 255, 255, 0.08);
+      --primary: #0B63B6;
+      --primary-accent: #3A8DDE;
+      --secondary: #C8102E;
+      --secondary-accent: #FF4A66;
+      --input-bg: #F4F8FC;
+      --shadow: 0 18px 45px rgba(11, 32, 55, 0.08);
+      --table-header: #0B2D4B;
+      --table-row-hover: #F8FBFE;
+    }
 
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  font-family:Inter,system-ui,sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(circle at 10% 0%, rgba(58,141,222,.18), transparent 28%),
-    radial-gradient(circle at 100% 10%, rgba(200,16,46,.14), transparent 22%),
-    linear-gradient(180deg,#F8FBFE 0%,#F2F6FA 100%);
-  min-height:100vh;
-}
+    body[data-theme="dark"] {
+      --bg-gradient: radial-gradient(circle at 10% 0%, rgba(11,99,182,.18), transparent 30%), radial-gradient(circle at 100% 10%, rgba(200,16,46,.1), transparent 25%), #0A131F;
+      --text: #F3F6FA;
+      --muted: #95A5B5;
+      --card: rgba(16, 28, 44, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --border: #1F3348;
+      --sidebar-bg: linear-gradient(180deg, #031527 0%, #020D1A 60%, #010811 100%);
+      --sidebar-card: rgba(255, 255, 255, 0.04);
+      --primary: #2982D4;
+      --primary-accent: #4FA2F0;
+      --secondary: #E02444;
+      --secondary-accent: #FF5A76;
+      --input-bg: #132234;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.4);
+      --table-header: #06182B;
+      --table-row-hover: #122438;
+    }
 
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background-image:
-    linear-gradient(rgba(0,59,113,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,59,113,.025) 1px, transparent 1px);
-  background-size:32px 32px;
-  mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),transparent 82%);
-}
+    body[data-theme="emerald"] {
+      --bg-gradient: radial-gradient(circle at 10% 0%, rgba(16, 185, 129, 0.15), transparent 30%), radial-gradient(circle at 100% 10%, rgba(217, 119, 6, 0.1), transparent 25%), #F4F9F6;
+      --text: #0F231D;
+      --muted: #567269;
+      --card: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(255, 255, 255, 0.7);
+      --border: #DEECE5;
+      --sidebar-bg: linear-gradient(180deg, #0B3B2F 0%, #06231C 60%, #031410 100%);
+      --sidebar-card: rgba(255, 255, 255, 0.08);
+      --primary: #0D8A68;
+      --primary-accent: #22C55E;
+      --secondary: #D97706;
+      --secondary-accent: #F59E0B;
+      --input-bg: #E9F4EE;
+      --shadow: 0 18px 45px rgba(11, 60, 45, 0.08);
+      --table-header: #082E25;
+      --table-row-hover: #EBF6F1;
+    }
 
-button,input,select{font:inherit}
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      color: var(--text);
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      transition: background .25s ease, color .25s ease;
+    }
 
-.shell{
-  display:grid;
-  grid-template-columns:235px minmax(0,1fr);
-  gap:18px;
-  padding:18px;
-  min-height:100vh;
-}
+    button, input, select { font: inherit; }
 
-.sidebar{
-  position:sticky;
-  top:18px;
-  height:calc(100vh - 36px);
-  border-radius:28px;
-  padding:20px;
-  color:white;
-  background:
-    radial-gradient(circle at top right,rgba(255,255,255,.14),transparent 24%),
-    linear-gradient(180deg,#063B6A 0%,#041F38 56%,#07111F 100%);
-  box-shadow:0 24px 70px rgba(1,26,49,.24);
-  overflow:hidden;
-}
+    .shell {
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 20px;
+      padding: 18px;
+      min-height: 100vh;
+    }
 
-.sidebar::after{
-  content:"";
-  position:absolute;
-  width:180px;height:180px;
-  border-radius:50%;
-  background:rgba(200,16,46,.2);
-  left:-90px;bottom:-70px;
-  filter:blur(4px);
-}
+    .sidebar {
+      position: sticky;
+      top: 18px;
+      height: calc(100vh - 36px);
+      border-radius: 26px;
+      padding: 22px;
+      color: white;
+      background: var(--sidebar-bg);
+      box-shadow: 0 24px 70px rgba(1,26,49,.24);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
 
-.brand{
-  position:relative;
-  z-index:1;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:28px;
-}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
 
-.brand-mark{
-  width:46px;height:46px;
-  border-radius:16px;
-  display:grid;
-  place-items:center;
-  font-weight:900;
-  background:linear-gradient(135deg,var(--uc-red),var(--uc-red-2));
-  box-shadow:0 10px 30px rgba(200,16,46,.35);
-}
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-accent));
+      box-shadow: 0 8px 24px rgba(200,16,46,.35);
+    }
 
-.brand-copy b{
-  display:block;
-  font-family:Manrope;
-  font-size:15px;
-}
-.brand-copy span{
-  display:block;
-  margin-top:3px;
-  font-size:11px;
-  color:#B8CBE0;
-}
+    .brand-copy b { display: block; font-family: Manrope; font-size: 15px; }
+    .brand-copy span { display: block; margin-top: 2px; font-size: 11px; opacity: 0.8; }
 
-.menu-label{
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.16em;
-  color:#7197BA;
-  margin:8px 10px;
-  position:relative;
-  z-index:1;
-}
+    .menu-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      opacity: 0.6;
+      margin: 10px 10px 6px;
+    }
 
-.menu{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  position:relative;
-  z-index:1;
-}
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
-.menu a{
-  color:#D9E7F3;
-  text-decoration:none;
-  border-radius:14px;
-  padding:12px 13px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  transition:.2s ease;
-}
-.menu a:hover,.menu a.active{
-  background:rgba(255,255,255,.10);
-  color:white;
-  transform:translateX(2px);
-}
-.menu .dot{
-  width:8px;height:8px;border-radius:50%;background:#76B7F0;
-}
-.menu a.active .dot{background:#FF4A66}
+    .menu a {
+      color: #D9E7F3;
+      text-decoration: none;
+      border-radius: 14px;
+      padding: 11px 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: .2s ease;
+    }
 
-.side-card{
-  position:absolute;
-  left:20px;right:20px;bottom:20px;
-  z-index:1;
-  padding:14px;
-  border-radius:18px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.10);
-  backdrop-filter:blur(10px);
-}
-.side-card small{
-  color:#BFD0E0;
-  line-height:1.5;
-}
+    .menu a:hover, .menu a.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
+      transform: translateX(3px);
+    }
 
-.content{
-  min-width:0;
-  padding:4px 4px 22px 0;
-}
+    .menu .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary-accent);
+    }
 
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:18px;
-  margin-bottom:18px;
-}
-.hello{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-.hello-icon{
-  width:46px;height:46px;
-  border-radius:16px;
-  display:grid;
-  place-items:center;
-  background:white;
-  box-shadow:var(--shadow);
-  font-size:20px;
-}
-.hello h1{
-  font-family:Manrope;
-  font-size:26px;
-  margin:0;
-  letter-spacing:-.03em;
-}
-.hello p{
-  margin:5px 0 0;
-  color:var(--muted);
-  font-size:13px;
-}
-.status-pill{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  padding:11px 14px;
-  border:1px solid rgba(0,59,113,.08);
-  border-radius:999px;
-  background:rgba(255,255,255,.75);
-  backdrop-filter:blur(14px);
-  box-shadow:0 10px 30px rgba(11,32,55,.07);
-  color:#5B6C7D;
-  font-size:12px;
-}
-.status-pill span:first-child{
-  width:9px;height:9px;border-radius:50%;background:#12B76A;
-  box-shadow:0 0 0 5px rgba(18,183,106,.10);
-}
+    .menu a.active .dot { background: var(--secondary-accent); }
 
-.hero{
-  min-height:250px;
-  border-radius:30px;
-  padding:30px;
-  overflow:hidden;
-  position:relative;
-  color:white;
-  background:
-    radial-gradient(circle at 80% 20%,rgba(255,255,255,.18),transparent 25%),
-    radial-gradient(circle at 5% 100%,rgba(200,16,46,.28),transparent 26%),
-    linear-gradient(115deg,#042B4E 0%,#07589C 58%,#003B71 100%);
-  box-shadow:0 26px 70px rgba(0,59,113,.20);
-  margin-bottom:18px;
-}
-.hero::before{
-  content:"";
-  position:absolute;
-  width:260px;height:260px;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:50%;
-  right:40px;top:-130px;
-}
-.hero::after{
-  content:"";
-  position:absolute;
-  width:390px;height:390px;
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:50%;
-  right:-80px;top:-200px;
-}
-.hero-grid{
-  display:grid;
-  grid-template-columns:1.3fr .9fr;
-  gap:20px;
-  align-items:end;
-  min-height:190px;
-  position:relative;
-  z-index:2;
-}
-.eyebrow{
-  display:inline-flex;
-  gap:8px;
-  align-items:center;
-  padding:8px 11px;
-  border-radius:999px;
-  background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.14);
-  font-size:11px;
-  margin-bottom:14px;
-}
-.hero h2{
-  font-family:Manrope;
-  font-size:38px;
-  line-height:1.04;
-  letter-spacing:-.04em;
-  margin:0;
-  max-width:700px;
-}
-.hero p{
-  max-width:650px;
-  color:#D7E8F7;
-  line-height:1.6;
-  margin:14px 0 0;
-  font-size:14px;
-}
-.hero-panel{
-  justify-self:end;
-  width:100%;
-  max-width:360px;
-  padding:18px;
-  border-radius:22px;
-  background:rgba(255,255,255,.11);
-  border:1px solid rgba(255,255,255,.14);
-  backdrop-filter:blur(14px);
-}
-.hero-panel small{color:#C5D8E8}
-.hero-big{
-  margin-top:7px;
-  font-size:31px;
-  font-weight:800;
-}
-.hero-row{
-  display:flex;
-  justify-content:space-between;
-  margin-top:14px;
-  font-size:12px;
-  color:#DDE9F4;
-}
-.hero-row strong{color:white}
+    .side-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: var(--sidebar-card);
+      border: 1px solid rgba(255,255,255,.1);
+      backdrop-filter: blur(10px);
+      font-size: 11px;
+      line-height: 1.5;
+    }
 
-.toolbar{
-  display:grid;
-  grid-template-columns:1.1fr repeat(5,1fr);
-  gap:12px;
-  margin-bottom:18px;
-}
-.glass{
-  background:var(--card);
-  border:1px solid var(--border);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  box-shadow:var(--shadow);
-}
-.control-card{
-  border-radius:20px;
-  padding:14px;
-}
-.control-card label{
-  display:block;
-  font-size:10px;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-  font-weight:800;
-  color:#7B8A9A;
-  margin-bottom:7px;
-}
-.control-card select,.control-card input{
-  width:100%;
-  border:none;
-  outline:none;
-  background:#F6F9FC;
-  padding:10px 11px;
-  border-radius:12px;
-  color:#10243A;
-}
-.upload-box{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-.upload-meta strong{
-  display:block;
-  font-size:12px;
-}
-.upload-meta span{
-  display:block;
-  margin-top:4px;
-  font-size:10px;
-  color:#8898A8;
-}
-.upload-btn{
-  flex:0 0 auto;
-  width:40px;height:40px;
-  display:grid;
-  place-items:center;
-  border:none;
-  border-radius:13px;
-  color:white;
-  background:linear-gradient(135deg,var(--uc-red),var(--uc-red-2));
-  cursor:pointer;
-  box-shadow:0 9px 24px rgba(200,16,46,.22);
-}
-#csvInput{display:none}
+    .content { min-width: 0; padding: 4px 4px 30px 0; }
 
-.kpis{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:14px;
-  margin-bottom:18px;
-}
-.kpi{
-  border-radius:22px;
-  padding:17px;
-  position:relative;
-  overflow:hidden;
-  transition:.22s ease;
-}
-.kpi:hover{transform:translateY(-4px)}
-.kpi-top{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:flex-start;
-}
-.kpi-icon{
-  width:38px;height:38px;
-  border-radius:13px;
-  display:grid;
-  place-items:center;
-  background:#EAF3FB;
-  color:var(--uc-blue-2);
-  font-weight:900;
-}
-.kpi:nth-child(even) .kpi-icon{
-  background:#FDECEF;color:var(--uc-red);
-}
-.kpi-label{
-  font-size:11px;
-  color:#7A8897;
-}
-.kpi-value{
-  margin-top:12px;
-  font-family:Manrope;
-  font-size:25px;
-  font-weight:800;
-  letter-spacing:-.04em;
-}
-.kpi-sub{
-  margin-top:5px;
-  font-size:10px;
-  color:#98A4B1;
-}
-.spark{
-  position:absolute;
-  width:90px;height:90px;
-  border-radius:50%;
-  right:-35px;bottom:-35px;
-  background:rgba(0,87,168,.06);
-}
-.kpi:nth-child(even) .spark{background:rgba(200,16,46,.06)}
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
 
-.grid-main{
-  display:grid;
-  grid-template-columns:1.6fr .95fr;
-  gap:16px;
-  margin-bottom:16px;
-}
-.grid-triple{
-  display:grid;
-  grid-template-columns:1.2fr .9fr .9fr;
-  gap:16px;
-  margin-bottom:16px;
-}
-.card{
-  border-radius:24px;
-  padding:18px;
-}
-.card-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:14px;
-}
-.card-head h3{
-  margin:0;
-  font-size:14px;
-  font-family:Manrope;
-}
-.card-head small{color:#8A99A8}
-.canvas-wrap{height:280px;position:relative}
+    .hello { display: flex; align-items: center; gap: 12px; }
+    .hello-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      font-size: 20px;
+    }
+    .hello h1 { font-family: Manrope; font-size: 24px; margin: 0; }
+    .hello p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
 
-.insights{
-  display:grid;
-  grid-template-columns:1.1fr 1.9fr;
-  gap:16px;
-  margin-bottom:16px;
-}
-.insight-lead{
-  border-radius:24px;
-  padding:20px;
-  background:
-    radial-gradient(circle at top right,rgba(255,255,255,.15),transparent 25%),
-    linear-gradient(145deg,#0A2A47,#0B5B9C);
-  color:white;
-}
-.insight-lead h3{margin:0 0 8px;font-size:16px}
-.insight-lead p{
-  margin:0;color:#D5E5F2;font-size:12px;line-height:1.55;
-}
-.insight-lead .metric{
-  font-size:32px;
-  font-weight:800;
-  margin-top:20px;
-}
-.insight-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-}
-.insight-item{
-  border-radius:18px;
-  padding:14px;
-  background:white;
-  border:1px solid #E8EEF4;
-  box-shadow:0 12px 30px rgba(18,36,55,.06);
-  font-size:11px;
-  line-height:1.5;
-  color:#5D6D7D;
-}
-.insight-item b{color:#13293D}
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-.table-card{
-  border-radius:24px;
-  padding:18px;
-}
-.table-actions{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  align-items:center;
-  margin-bottom:14px;
-}
-.table-actions h3{margin:0;font-size:15px}
-.search{
-  width:min(340px,100%);
-  border:1px solid #E6EDF3;
-  background:#F9FBFD;
-  border-radius:13px;
-  padding:11px 12px;
-  outline:none;
-}
-.table-wrap{
-  overflow:auto;
-  max-height:410px;
-  border-radius:16px;
-  border:1px solid #E8EEF4;
-}
-table{
-  width:100%;
-  min-width:1100px;
-  border-collapse:collapse;
-  font-size:11px;
-}
-thead th{
-  position:sticky;
-  top:0;
-  z-index:2;
-  padding:12px 11px;
-  text-align:left;
-  background:#0B2D4B;
-  color:white;
-  white-space:nowrap;
-}
-tbody td{
-  padding:11px;
-  border-bottom:1px solid #EDF2F7;
-  white-space:nowrap;
-}
-tbody tr:hover{background:#F8FBFE}
-.tag{
-  display:inline-flex;
-  align-items:center;
-  border-radius:999px;
-  padding:5px 9px;
-  background:#EAF3FB;
-  color:#0B63B6;
-  font-weight:700;
-}
-.tag.red{background:#FDECEF;color:#C8102E}
-.empty{text-align:center;padding:26px;color:#8693A0}
+    .global-search {
+      width: 250px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 9px 13px;
+      outline: none;
+      box-shadow: var(--shadow);
+      font-size: 12px;
+    }
 
-.footer{
-  margin-top:18px;
-  text-align:center;
-  color:#93A0AC;
-  font-size:10px;
-}
+    .top-action, .theme-select {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 9px 13px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: .2s ease;
+      outline: none;
+    }
 
-@media(max-width:1250px){
-  .toolbar{grid-template-columns:repeat(3,1fr)}
-  .kpis{grid-template-columns:repeat(3,1fr)}
-  .grid-triple{grid-template-columns:1fr 1fr}
-  .grid-triple > :last-child{grid-column:1/-1}
-}
-@media(max-width:900px){
-  .shell{display:block;padding:12px}
-  .sidebar{position:relative;top:0;height:auto;margin-bottom:14px}
-  .menu,.menu-label,.side-card{display:none}
-  .content{padding:0}
-  .hero-grid,.grid-main,.grid-triple,.insights,.insight-grid,.toolbar,.kpis{grid-template-columns:1fr}
-  .hero-panel{justify-self:start}
-  .topbar{align-items:flex-start;flex-direction:column}
-  .hero h2{font-size:31px}
-}
+    .top-action:hover { transform: translateY(-2px); }
 
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 500;
+    }
 
-/* ===== ULTRA PRO ADDITIONS ===== */
-body.dark{
-  --navy:#F7FAFC;--text:#F6F8FB;--muted:#A9B6C4;--bg:#07111F;
-  --card:rgba(13,27,45,.88);--border:#20364C;--shadow:0 18px 50px rgba(0,0,0,.28);
-}
-body.dark{background:radial-gradient(circle at 10% 0%,rgba(11,99,182,.20),transparent 28%),radial-gradient(circle at 100% 10%,rgba(200,16,46,.12),transparent 23%),#07111F}
-body.dark .glass,body.dark .panel,body.dark .table-card{background:rgba(13,27,45,.88)}
-body.dark .field input,body.dark .field select,body.dark .search,body.dark .control-card input,body.dark .control-card select{background:#102235;color:#F7FAFC;border-color:#20364C}
-body.dark tbody tr:hover{background:#102235}
-body.dark tbody td{border-color:#20364C}
+    .status-pill span:first-child {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #12B76A;
+      box-shadow: 0 0 0 4px rgba(18,183,106,.15);
+    }
 
-.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.top-action{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:13px;padding:10px 11px;box-shadow:0 8px 22px rgba(9,30,66,.07);cursor:pointer;transition:.2s ease}
-.top-action:hover{transform:translateY(-2px)}
-.global-search{min-width:260px;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:13px;padding:10px 12px;outline:none;box-shadow:0 8px 22px rgba(9,30,66,.07)}
-.dropdown{position:relative}.drop-menu{position:absolute;right:0;top:46px;z-index:80;min-width:175px;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow);padding:7px;border-radius:14px;display:none;backdrop-filter:blur(18px)}
-.drop-menu.show{display:block}.drop-menu button{width:100%;text-align:left;border:0;background:transparent;color:var(--text);padding:9px 10px;border-radius:9px;cursor:pointer}.drop-menu button:hover{background:rgba(11,99,182,.08)}
+    .hero {
+      border-radius: 28px;
+      padding: 28px;
+      position: relative;
+      color: white;
+      background: linear-gradient(120deg, #05294A 0%, var(--primary) 65%, #00274D 100%);
+      box-shadow: 0 20px 60px rgba(0, 43, 82, 0.22);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
 
-.hero-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.hero-btn{border:0;border-radius:13px;padding:11px 14px;font-weight:800;cursor:pointer;transition:.2s ease}.hero-btn:hover{transform:translateY(-2px)}.hero-btn.white{background:white;color:#06365f}.hero-btn.red{background:linear-gradient(135deg,#C8102E,#FF4966);color:white}.hero-btn.ghost{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);color:white}
-.hero-art{position:absolute;right:2%;bottom:-22px;width:280px;opacity:.16;pointer-events:none}
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.4fr .8fr;
+      gap: 20px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
 
-.quick-actions{display:flex;gap:8px;flex-wrap:wrap;margin:-4px 0 18px}.chip-btn{border:1px solid var(--border);background:var(--card);color:var(--text);padding:8px 11px;border-radius:999px;font-size:11px;cursor:pointer;box-shadow:0 6px 18px rgba(9,30,66,.06)}.chip-btn:hover,.chip-btn.active{background:#0B63B6;color:white;border-color:#0B63B6}
+    .eyebrow {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 11px;
+      margin-bottom: 12px;
+    }
 
-.pro-section{margin-top:18px}.pro-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:16px}.mini-card{border-radius:22px;padding:17px;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow);backdrop-filter:blur(18px)}.mini-card h3{font-size:14px;margin:0 0 12px}.mini-chart-wrap{height:245px;position:relative}
-.rank-list{display:flex;flex-direction:column;gap:9px}.rank-item{display:grid;grid-template-columns:28px 1fr auto;gap:9px;align-items:center;padding:10px;border-radius:13px;background:rgba(11,99,182,.055)}.rank-no{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#EAF3FB;color:#0B63B6;font-weight:900}.rank-item:first-child .rank-no{background:#FDECEF;color:#C8102E}.rank-item strong{font-size:11px}.rank-item small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.rank-value{font-size:11px;font-weight:900}
+    .hero h2 { font-family: Manrope; font-size: 32px; margin: 0; line-height: 1.15; }
+    .hero p { max-width: 620px; color: #DDEBFA; font-size: 13px; line-height: 1.6; margin: 12px 0 18px; }
 
-.alert-list{display:flex;flex-direction:column;gap:9px}.alert-box{display:flex;gap:10px;padding:11px;border-radius:14px;background:rgba(11,99,182,.055)}.alert-icon{width:31px;height:31px;border-radius:10px;display:grid;place-items:center;background:#EAF3FB}.alert-box.warn .alert-icon{background:#FFF1D6}.alert-box.bad .alert-icon{background:#FDECEF}.alert-box strong{font-size:11px}.alert-box p{margin:3px 0 0;font-size:9px;color:var(--muted);line-height:1.4}
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hero-btn {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    .hero-btn:hover { transform: translateY(-2px); }
+    .hero-btn.white { background: white; color: #042749; }
+    .hero-btn.red { background: linear-gradient(135deg, var(--secondary), var(--secondary-accent)); color: white; }
+    .hero-btn.ghost { background: rgba(255,255,255,.14); color: white; border: 1px solid rgba(255,255,255,.2); }
 
-.about-panel{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.about-copy,.vars-card{border-radius:22px;padding:20px;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow)}.about-copy h3,.vars-card h3{margin:0 0 10px;font-size:16px}.about-copy p{font-size:11px;color:var(--muted);line-height:1.7}.vars-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.var-pill{padding:9px;border-radius:11px;background:rgba(11,99,182,.06);font-size:9px}.var-pill b{display:block;font-size:10px;margin-bottom:2px}
+    .hero-panel {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(12px);
+    }
+    .hero-big { font-size: 30px; font-weight: 800; margin: 6px 0 12px; }
+    .hero-row { display: flex; justify-content: space-between; font-size: 12px; opacity: 0.95; }
 
-.modal-overlay{position:fixed;inset:0;background:rgba(3,12,22,.56);display:none;align-items:center;justify-content:center;z-index:999;padding:18px}.modal-overlay.show{display:flex}.modal-box{width:min(620px,96vw);max-height:85vh;overflow:auto;border-radius:24px;background:var(--card);border:1px solid var(--border);padding:20px;box-shadow:0 28px 90px rgba(0,0,0,.28)}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head h3{margin:0}.modal-close{border:0;background:rgba(11,99,182,.08);color:var(--text);width:35px;height:35px;border-radius:10px;cursor:pointer}.modal-box p{font-size:11px;color:var(--muted);line-height:1.6}
-.toast-pro{position:fixed;right:20px;bottom:20px;z-index:1000;background:#07111F;color:white;border-radius:13px;padding:11px 13px;box-shadow:0 18px 42px rgba(0,0,0,.24);font-size:11px;transform:translateY(18px);opacity:0;pointer-events:none;transition:.25s}.toast-pro.show{transform:none;opacity:1}
+    .glass {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
 
-@media(max-width:1250px){.pro-grid{grid-template-columns:1fr 1fr}.pro-grid>:last-child{grid-column:1/-1}}@media(max-width:900px){.top-actions{width:100%}.global-search{width:100%;min-width:0}.pro-grid,.about-panel{grid-template-columns:1fr}.hero-art{display:none}}
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.2fr repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
 
+    .control-card {
+      border-radius: 18px;
+      padding: 13px;
+    }
+    .control-card label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .control-card select, .control-card input {
+      width: 100%;
+      border: 1px solid var(--border);
+      outline: none;
+      background: var(--input-bg);
+      padding: 9px 10px;
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 12px;
+    }
 
-.menu a.active{
-  background:rgba(255,255,255,.12)!important;
-  color:#fff!important;
-}
-.topbar{
-  align-items:flex-start;
-}
-@media(max-width:1250px){
-  .topbar{flex-direction:column}
-  .top-actions{width:100%}
-  .global-search{flex:1;min-width:220px}
-}
+    .upload-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .upload-meta strong { display: block; font-size: 12px; }
+    .upload-meta span { display: block; font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .upload-btn {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-accent));
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: .2s;
+    }
+    .upload-btn:hover { transform: scale(1.05); }
+    #csvInput { display: none; }
 
-</style>
+    .quick-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .chip-btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,.03);
+      transition: .2s;
+    }
+    .chip-btn:hover, .chip-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .kpi {
+      border-radius: 20px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: .2s ease;
+    }
+    .kpi:hover { transform: translateY(-3px); }
+    .kpi-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .kpi-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(11, 99, 182, 0.12);
+      color: var(--primary);
+      font-weight: 800;
+    }
+    .kpi:nth-child(even) .kpi-icon {
+      background: rgba(200, 16, 46, 0.12);
+      color: var(--secondary);
+    }
+    .kpi-label { font-size: 11px; color: var(--muted); font-weight: 600; }
+    .kpi-value { margin-top: 10px; font-family: Manrope; font-size: 22px; font-weight: 800; }
+    .kpi-sub { margin-top: 4px; font-size: 10px; color: var(--muted); }
+
+    .grid-main {
+      display: grid;
+      grid-template-columns: 1.6fr .95fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .grid-triple {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .card { border-radius: 22px; padding: 18px; }
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .card-head h3 { margin: 0; font-size: 14px; font-family: Manrope; }
+    .card-head small { color: var(--muted); font-size: 11px; }
+    .canvas-wrap { height: 270px; position: relative; }
+
+    /* Pareto banner styling */
+    .pareto-card {
+      border-radius: 22px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .pareto-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      background: rgba(200,16,46,.12);
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    .insights {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .insight-lead {
+      border-radius: 22px;
+      padding: 22px;
+      background: linear-gradient(135deg, #05294A, var(--primary));
+      color: white;
+    }
+    .insight-lead h3 { margin: 0 0 6px; font-size: 16px; }
+    .insight-lead p { margin: 0; font-size: 12px; opacity: 0.85; line-height: 1.5; }
+    .insight-lead .metric { font-size: 28px; font-weight: 800; margin-top: 18px; }
+    .insight-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .insight-item {
+      border-radius: 16px;
+      padding: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .insight-item b { color: var(--primary); display: block; font-size: 12px; margin-bottom: 4px; }
+
+    .table-card { border-radius: 22px; padding: 18px; margin-bottom: 20px; }
+    .table-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .search {
+      min-width: 260px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 9px 12px;
+      outline: none;
+      font-size: 12px;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      max-height: 400px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 11px;
+      text-align: left;
+      background: var(--table-header);
+      color: white;
+      white-space: nowrap;
+    }
+    tbody td {
+      padding: 10px 11px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody tr:hover { background: var(--table-row-hover); }
+    .tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(11, 99, 182, 0.12);
+      color: var(--primary);
+    }
+    .tag.red { background: rgba(200, 16, 46, 0.12); color: var(--secondary); }
+    .empty { text-align: center; padding: 30px; color: var(--muted); }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 16px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      width: min(600px, 94vw);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.3);
+    }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .modal-close {
+      border: none;
+      background: var(--input-bg);
+      color: var(--text);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .toast-pro {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 1000;
+      background: #07111F;
+      color: white;
+      border-radius: 12px;
+      padding: 11px 16px;
+      box-shadow: 0 16px 36px rgba(0,0,0,.3);
+      font-size: 12px;
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s ease;
+    }
+    .toast-pro.show { transform: none; opacity: 1; }
+
+    .footer { text-align: center; color: var(--muted); font-size: 11px; padding: 10px 0; }
+
+    @media(max-width: 1200px) {
+      .toolbar { grid-template-columns: repeat(3, 1fr); }
+      .kpis { grid-template-columns: repeat(3, 1fr); }
+      .grid-triple { grid-template-columns: 1fr 1fr; }
+      .grid-triple > :last-child { grid-column: 1 / -1; }
+    }
+
+    @media(max-width: 900px) {
+      .shell { display: block; padding: 12px; }
+      .sidebar { position: static; height: auto; margin-bottom: 16px; }
+      .menu { display: none; }
+      .hero-grid, .grid-main, .grid-triple, .insights, .insight-grid, .toolbar, .kpis { grid-template-columns: 1fr; }
+      .global-search { width: 100%; }
+    }
+  </style>
 </head>
 <body>
+
 <div class="shell">
+  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-mark">UI</div>
-      <div class="brand-copy">
-        <b>Industrial Analytics</b>
-        <span>Universidad de Cuenca</span>
+    <div>
+      <div class="brand">
+        <div class="brand-mark">UI</div>
+        <div class="brand-copy">
+          <b>Industrial Analytics</b>
+          <span>Universidad de Cuenca</span>
+        </div>
       </div>
+
+      <div class="menu-label">Navegación</div>
+      <nav class="menu">
+        <a class="active" href="#inicio"><span class="dot"></span><span>Resumen General</span></a>
+        <a href="#pareto-sec"><span class="dot"></span><span>Análisis de Pareto (80/20)</span></a>
+        <a href="#analitica"><span class="dot"></span><span>Comportamiento Comercial</span></a>
+        <a href="#logistica"><span class="dot"></span><span>Eficiencia y Logística</span></a>
+        <a href="#insights"><span class="dot"></span><span>Diagnósticos</span></a>
+        <a href="#datos"><span class="dot"></span><span>Explorador de Datos</span></a>
+      </nav>
     </div>
 
-    <div class="menu-label">Workspace</div>
-    <nav class="menu">
-      <a class="active" href="#inicio" data-es="Overview" data-en="Overview"><span class="dot"></span><span>Overview</span></a>
-      <a href="#analitica" data-es="Analytics" data-en="Analytics"><span class="dot"></span><span>Analytics</span></a>
-      <a href="#advanced" data-es="Advanced" data-en="Advanced"><span class="dot"></span><span>Advanced</span></a>
-      <a href="#logistica" data-es="Logística" data-en="Logistics"><span class="dot"></span><span>Logística</span></a>
-      <a href="#insights" data-es="Insights" data-en="Insights"><span class="dot"></span><span>Insights</span></a>
-      <a href="#datos" data-es="Data Explorer" data-en="Data Explorer"><span class="dot"></span><span>Data Explorer</span></a>
-      <a href="#about" data-es="Acerca del proyecto" data-en="About project"><span class="dot"></span><span>Acerca del proyecto</span></a>
-    </nav>
-
     <div class="side-card">
-      <small>
-        <b style="color:white">ING. INDUSTRIAL</b><br>
-        Analítica aplicada a ventas, procesos y toma de decisiones.
-      </small>
+      <b style="color:white">INGENIERÍA INDUSTRIAL</b><br>
+      Optimización de procesos comerciales, lead time y control de calidad.
     </div>
   </aside>
 
+  <!-- CONTENIDO PRINCIPAL -->
   <main class="content">
+    
+    <!-- TOPBAR -->
     <div class="topbar">
       <div class="hello">
-        <div class="hello-icon">📊</div>
+        <div class="hello-icon">📈</div>
         <div>
-          <h1 data-es="Dashboard E-Commerce" data-en="E-Commerce Dashboard">Dashboard E-Commerce</h1>
-          <p data-es="Ventas, clientes y eficiencia operativa en una sola vista."
-             data-en="Sales, customers and operational efficiency in one view.">
-             Ventas, clientes y eficiencia operativa en una sola vista.
-          </p>
+          <h1>Panel de Control de Calidad & Operaciones</h1>
+          <p>Análisis estadístico multivariado y toma de decisiones basada en datos.</p>
         </div>
       </div>
 
       <div class="top-actions">
-        <input id="globalSearch" class="global-search"
-          placeholder="Buscar categoría, región o pedido..."
-          data-placeholder-es="Buscar categoría, región o pedido..."
-          data-placeholder-en="Search category, region or order...">
+        <input id="globalSearch" class="global-search" placeholder="Buscar categoría, región o pedido...">
 
-        <div class="dropdown">
-          <button class="top-action" id="langBtn">🌐 ES ▾</button>
-          <div class="drop-menu" id="langMenu">
-            <button data-language="es">🇪🇨 Español</button>
-            <button data-language="en">🇺🇸 English</button>
-          </div>
-        </div>
+        <!-- SELECTOR DE TEMAS -->
+        <select class="theme-select" id="themeSelect">
+          <option value="light">☀️ Modo Institucional</option>
+          <option value="dark">🌙 Modo Oscuro</option>
+          <option value="emerald">🌲 Modo Esmeralda</option>
+        </select>
 
-        <button class="top-action" id="themeBtn" title="Cambiar modo">🌙</button>
-
-        <div class="dropdown">
-          <button class="top-action" id="notifBtn">🔔</button>
-          <div class="drop-menu" id="notifMenu">
-            <button data-es="✅ Dataset listo para analizar" data-en="✅ Dataset ready to analyze">✅ Dataset listo para analizar</button>
-            <button data-es="📊 Dashboard actualizado" data-en="📊 Dashboard updated">📊 Dashboard actualizado</button>
-            <button data-es="⚠ Revisa tiempos de entrega" data-en="⚠ Review delivery times">⚠ Revisa tiempos de entrega</button>
-          </div>
-        </div>
-
-        <div class="dropdown">
-          <button class="top-action" id="profileBtn">👤 JD ▾</button>
-          <div class="drop-menu" id="profileMenu">
-            <button><b>José David</b></button>
-            <button id="profileAbout" data-es="ℹ Acerca del proyecto" data-en="ℹ About the project">ℹ Acerca del proyecto</button>
-            <button id="profileSettings" data-es="⚙ Configuración" data-en="⚙ Settings">⚙ Configuración</button>
-          </div>
-        </div>
+        <button class="top-action" id="aboutBtn">ℹ Acerca de</button>
 
         <div class="status-pill">
           <span></span>
-          <span id="dataStatus">Esperando datos</span>
+          <span id="dataStatus">Cargando datos...</span>
         </div>
       </div>
     </div>
 
+    <!-- HERO SECTION -->
     <section id="inicio" class="hero">
       <div class="hero-grid">
         <div>
-          <div class="eyebrow">⚙ Ingeniería Industrial · Data Driven</div>
-          <h2>Convierte datos de ventas en decisiones que sí sirven.</h2>
-          <p data-es="Explora el rendimiento comercial, comportamiento del cliente y tiempos de entrega a partir de la base de datos de e-commerce." data-en="Explore commercial performance, customer behavior and delivery times using the e-commerce dataset.">Explora el rendimiento comercial, comportamiento del cliente y tiempos de entrega a partir de la base de datos de e-commerce.</p>
+          <div class="eyebrow">⚙ Metodologías de Calidad · Universidad de Cuenca</div>
+          <h2>Transforma transacciones en ventaja competitiva.</h2>
+          <p>Plataforma para monitorización de rendimiento comercial, distribución de Pareto, variabilidad en tiempos de entrega y nivel de servicio al cliente.</p>
           <div class="hero-actions">
-            <button class="hero-btn white" onclick="document.querySelector('#analitica').scrollIntoView({behavior:'smooth'})" data-es="Explorar dashboard" data-en="Explore dashboard">Explorar dashboard</button>
-            <button class="hero-btn red" onclick="document.querySelector('#datos').scrollIntoView({behavior:'smooth'})" data-es="Ver dataset" data-en="View dataset">Ver dataset</button>
-            <button class="hero-btn ghost" id="aboutBtn" data-es="Acerca del proyecto" data-en="About project">Acerca del proyecto</button>
+            <button class="hero-btn white" id="btnScrollPareto">Ver Diagrama de Pareto</button>
+            <button class="hero-btn red" id="btnScrollData">Explorar Dataset</button>
+            <button class="hero-btn ghost" id="btnGenerarDemo">Cargar Datos Demo</button>
           </div>
-          <svg class="hero-art" viewBox="0 0 300 230" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="34" y="35" width="220" height="140" rx="24" fill="white"/><rect x="55" y="57" width="88" height="8" rx="4" fill="#0B63B6"/><rect x="55" y="78" width="164" height="4" rx="2" fill="#B7D5EE"/><rect x="55" y="92" width="132" height="4" rx="2" fill="#B7D5EE"/><rect x="55" y="122" width="22" height="31" rx="6" fill="#0B63B6"/><rect x="86" y="108" width="22" height="45" rx="6" fill="#C8102E"/><rect x="117" y="96" width="22" height="57" rx="6" fill="#0B63B6"/><rect x="148" y="115" width="22" height="38" rx="6" fill="#C8102E"/><rect x="179" y="83" width="22" height="70" rx="6" fill="#0B63B6"/></svg>
         </div>
 
         <div class="hero-panel">
-          <small>Revenue del periodo</small>
-          <div class="hero-big" id="heroRevenue">$0</div>
+          <small>Facturación Global Seleccionada</small>
+          <div class="hero-big" id="heroRevenue">$0.00</div>
           <div class="hero-row">
-            <span>Pedidos <strong id="heroOrders">0</strong></span>
-            <span>Rating <strong id="heroRating">0.0</strong></span>
+            <span>Órdenes: <strong id="heroOrders">0</strong></span>
+            <span>NPS / Rating: <strong id="heroRating">0.0 ★</strong></span>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- BARRA DE FILTROS -->
     <section class="toolbar">
       <div class="control-card glass">
-        <label>Base de datos</label>
+        <label>Archivo CSV</label>
         <div class="upload-box">
           <div class="upload-meta">
-            <strong>ecommerce_sales_analytics_5000.csv</strong>
-            <span>Carga manual o automática</span>
+            <strong id="csvFileName">ecommerce_sales_analytics.csv</strong>
+            <span>Subir archivo personalizado</span>
           </div>
-          <label for="csvInput" class="upload-btn">＋</label>
+          <label for="csvInput" class="upload-btn" title="Subir CSV">＋</label>
           <input id="csvInput" type="file" accept=".csv">
         </div>
       </div>
@@ -777,565 +747,669 @@ body.dark tbody td{border-color:#20364C}
       </div>
 
       <div class="control-card glass">
-        <label>Pago</label>
+        <label>Método de Pago</label>
         <select id="paymentFilter"><option value="">Todos</option></select>
       </div>
 
       <div class="control-card glass">
-        <label>Desde</label>
+        <label>Fecha Inicio</label>
         <input id="dateFrom" type="date">
       </div>
 
       <div class="control-card glass">
-        <label>Hasta</label>
+        <label>Fecha Fin</label>
         <input id="dateTo" type="date">
       </div>
     </section>
 
+    <!-- QUICK ACTIONS -->
     <div class="quick-actions">
-      <button class="chip-btn active" data-range="all">Todo el periodo</button>
-      <button class="chip-btn" data-range="30">30 días</button>
-      <button class="chip-btn" data-range="90">90 días</button>
-      <button class="chip-btn" data-range="180">180 días</button>
-      <button class="chip-btn" id="resetAllBtn">↻ Restablecer</button>
-      <button class="chip-btn" id="exportCsvBtn">⇩ Exportar CSV</button>
+      <button class="chip-btn active" data-range="all">Todo el Período</button>
+      <button class="chip-btn" data-range="30">Últimos 30 días</button>
+      <button class="chip-btn" data-range="90">Últimos 90 días</button>
+      <button class="chip-btn" data-range="180">Últimos 180 días</button>
+      <button class="chip-btn" id="resetAllBtn">↻ Limpiar Filtros</button>
+      <button class="chip-btn" id="exportCsvBtn">⇩ Exportar a CSV</button>
     </div>
 
+    <!-- KPIS -->
     <section class="kpis">
       <div class="kpi glass">
         <div class="kpi-top">
           <div>
-            <div class="kpi-label">Ingresos totales</div>
+            <div class="kpi-label">Ingresos Totales</div>
             <div class="kpi-value" id="kpiRevenue">$0</div>
           </div>
           <div class="kpi-icon">$</div>
         </div>
-        <div class="kpi-sub">Revenue generado</div>
-        <div class="spark"></div>
+        <div class="kpi-sub">Total facturado neto</div>
       </div>
 
       <div class="kpi glass">
         <div class="kpi-top">
           <div>
-            <div class="kpi-label">Pedidos</div>
+            <div class="kpi-label">Volumen de Pedidos</div>
             <div class="kpi-value" id="kpiOrders">0</div>
           </div>
           <div class="kpi-icon">#</div>
         </div>
-        <div class="kpi-sub">Órdenes registradas</div>
-        <div class="spark"></div>
+        <div class="kpi-sub">Órdenes procesadas</div>
       </div>
 
       <div class="kpi glass">
         <div class="kpi-top">
           <div>
-            <div class="kpi-label">Ticket promedio</div>
+            <div class="kpi-label">Ticket Promedio</div>
             <div class="kpi-value" id="kpiTicket">$0</div>
           </div>
-          <div class="kpi-icon">↗</div>
+          <div class="kpi-icon">🛒</div>
         </div>
-        <div class="kpi-sub">Ingreso medio por orden</div>
-        <div class="spark"></div>
+        <div class="kpi-sub">Valor medio por pedido</div>
       </div>
 
       <div class="kpi glass">
         <div class="kpi-top">
           <div>
-            <div class="kpi-label">Rating</div>
-            <div class="kpi-value" id="kpiRating">0.0</div>
+            <div class="kpi-label">Satisfacción Promedio</div>
+            <div class="kpi-value" id="kpiRating">0.0 ★</div>
           </div>
           <div class="kpi-icon">★</div>
         </div>
-        <div class="kpi-sub">Satisfacción / 5</div>
-        <div class="spark"></div>
+        <div class="kpi-sub">Calificación sobre 5</div>
       </div>
 
       <div class="kpi glass">
         <div class="kpi-top">
           <div>
-            <div class="kpi-label">Lead time</div>
-            <div class="kpi-value" id="kpiDelivery">0 días</div>
+            <div class="kpi-label">Lead Time Medio</div>
+            <div class="kpi-value" id="kpiDelivery">0 d</div>
           </div>
           <div class="kpi-icon">⏱</div>
         </div>
-        <div class="kpi-sub">Entrega promedio</div>
-        <div class="spark"></div>
+        <div class="kpi-sub">Tiempo de entrega promedio</div>
       </div>
     </section>
 
+    <!-- DIAGRAMA DE PARETO (NOVEDAD CLAVE) -->
+    <section id="pareto-sec" class="pareto-card glass">
+      <div class="card-head">
+        <div>
+          <span class="pareto-badge">Herramienta de Calidad e Ingeniería Industrial</span>
+          <h3>Diagrama de Pareto de Ingresos por Categoría (Principio 80/20)</h3>
+        </div>
+        <small id="paretoInsightText">Analizando concentración...</small>
+      </div>
+      <div class="canvas-wrap" style="height:320px;">
+        <canvas id="paretoChart"></canvas>
+      </div>
+    </section>
+
+    <!-- GRÁFICAS DE VENTAS -->
     <section id="analitica" class="grid-main">
       <div class="card glass">
         <div class="card-head">
-          <h3>Revenue Trend</h3>
-          <small>Evolución mensual</small>
+          <h3>Evolución Mensual de Ventas</h3>
+          <small>Facturación temporal</small>
         </div>
         <div class="canvas-wrap"><canvas id="revenueChart"></canvas></div>
       </div>
 
       <div class="card glass">
         <div class="card-head">
-          <h3>Category Mix</h3>
-          <small>Participación por categoría</small>
+          <h3>Distribución por Canal de Pago</h3>
+          <small>Métodos utilizados</small>
         </div>
-        <div class="canvas-wrap"><canvas id="categoryChart"></canvas></div>
+        <div class="canvas-wrap"><canvas id="paymentChart"></canvas></div>
       </div>
     </section>
 
-    <section class="grid-triple">
+    <!-- GRÁFICAS DE OPERACIONES Y LOGÍSTICA -->
+    <section id="logistica" class="grid-triple">
       <div class="card glass">
         <div class="card-head">
-          <h3>Revenue by Region</h3>
-          <small>Comparativo territorial</small>
+          <h3>Ventas por Región Geográfica</h3>
+          <small>Comparativa territorial</small>
         </div>
         <div class="canvas-wrap"><canvas id="regionChart"></canvas></div>
       </div>
 
       <div class="card glass">
         <div class="card-head">
-          <h3>Payment Split</h3>
-          <small>Métodos más usados</small>
+          <h3>Relación Lead Time vs Rating</h3>
+          <small>Impacto del retraso en la satisfacción</small>
         </div>
-        <div class="canvas-wrap"><canvas id="paymentChart"></canvas></div>
+        <div class="canvas-wrap"><canvas id="deliveryChart"></canvas></div>
       </div>
 
       <div class="card glass">
         <div class="card-head">
-          <h3>Delivery Experience</h3>
-          <small>Entrega vs rating</small>
+          <h3>Dispersión: Descuento vs Ingreso</h3>
+          <small>Efecto de las promociones</small>
         </div>
-        <div class="canvas-wrap"><canvas id="deliveryChart"></canvas></div>
+        <div class="canvas-wrap"><canvas id="scatterChart"></canvas></div>
       </div>
     </section>
 
-
-    <section id="advanced" class="pro-section">
-      <div class="pro-grid">
-        <div class="mini-card">
-          <h3>Revenue vs Discount</h3>
-          <div class="mini-chart-wrap"><canvas id="scatterChart"></canvas></div>
-        </div>
-        <div class="mini-card">
-          <h3 data-es="Rating por categoría" data-en="Rating by category">Rating por categoría</h3>
-          <div class="mini-chart-wrap"><canvas id="ratingCategoryChart"></canvas></div>
-        </div>
-        <div class="mini-card">
-          <h3 data-es="Top categorías" data-en="Top categories">Top categorías</h3>
-          <div class="rank-list" id="categoryRanking"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="logistica" class="pro-section">
-      <div class="pro-grid">
-        <div class="mini-card">
-          <h3 data-es="Lead time por región" data-en="Lead time by region">Lead time por región</h3>
-          <div class="mini-chart-wrap"><canvas id="deliveryRegionChart"></canvas></div>
-        </div>
-        <div class="mini-card">
-          <h3 data-es="Cantidad vendida por categoría" data-en="Quantity sold by category">Cantidad vendida por categoría</h3>
-          <div class="mini-chart-wrap"><canvas id="quantityChart"></canvas></div>
-        </div>
-        <div class="mini-card">
-          <h3 data-es="Alertas operativas" data-en="Operational alerts">Alertas operativas</h3>
-          <div class="alert-list" id="alertList"></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="about" class="pro-section">
-      <div class="about-panel">
-        <div class="about-copy">
-          <h3 data-es="E-Commerce Intelligence Platform" data-en="E-Commerce Intelligence Platform">E-Commerce Intelligence Platform</h3>
-          <p data-es="Esta plataforma analiza 5.000 registros de comercio electrónico para convertir datos comerciales y operativos en información útil para la toma de decisiones. Integra ventas, clientes, regiones, métodos de pago, descuentos, satisfacción y lead time, conectando el análisis con aplicaciones de Ingeniería Industrial." data-en="This platform analyzes 5,000 e-commerce records to turn commercial and operational data into useful decision-making information. It integrates sales, customers, regions, payment methods, discounts, satisfaction and lead time with Industrial Engineering applications.">Esta plataforma analiza 5.000 registros de comercio electrónico para convertir datos comerciales y operativos en información útil para la toma de decisiones. Integra ventas, clientes, regiones, métodos de pago, descuentos, satisfacción y lead time, conectando el análisis con aplicaciones de Ingeniería Industrial.</p>
-          <p><b>Universidad de Cuenca · Ingeniería Industrial · 2026</b></p>
-        </div>
-        <div class="vars-card">
-          <h3 data-es="Variables principales" data-en="Main variables">Variables principales</h3>
-          <div class="vars-grid">
-            <div class="var-pill"><b>order_id</b>Pedido</div><div class="var-pill"><b>order_date</b>Fecha</div>
-            <div class="var-pill"><b>customer_id</b>Cliente</div><div class="var-pill"><b>product_category</b>Categoría</div>
-            <div class="var-pill"><b>region</b>Región</div><div class="var-pill"><b>quantity</b>Cantidad</div>
-            <div class="var-pill"><b>unit_price</b>Precio</div><div class="var-pill"><b>discount</b>Descuento</div>
-            <div class="var-pill"><b>payment_method</b>Pago</div><div class="var-pill"><b>delivery_days</b>Entrega</div>
-            <div class="var-pill"><b>customer_rating</b>Rating</div><div class="var-pill"><b>revenue</b>Revenue</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
+    <!-- DIAGNÓSTICOS / INSIGHTS -->
     <section id="insights" class="insights">
       <div class="insight-lead">
-        <h3>Smart Insights</h3>
-        <p>Lectura automática de los indicadores más relevantes para toma de decisiones.</p>
+        <h3>Diagnósticos Automáticos</h3>
+        <p>Lectura analítica para priorización de inventario y atención logística inmediata.</p>
         <div class="metric" id="mainInsightMetric">—</div>
-        <small id="mainInsightLabel">Carga la base de datos</small>
+        <small id="mainInsightLabel">Cargando...</small>
       </div>
       <div class="insight-grid" id="insightGrid">
-        <div class="insight-item">Aún no hay datos cargados.</div>
+        <div class="insight-item">Generando insights del conjunto actual...</div>
       </div>
     </section>
 
+    <!-- DATA EXPLORER -->
     <section id="datos" class="table-card glass">
       <div class="table-actions">
-        <h3>Data Explorer</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="tableSearch" class="search" placeholder="Buscar pedido, región, categoría..."><button class="btn btn-primary" id="exportCsvBtn2">⇩ CSV</button></div>
+        <div>
+          <h3 style="margin:0 0 4px">Explorador de Transacciones</h3>
+          <small style="color:var(--muted)">Mostrando hasta 150 registros coincidentes con los filtros.</small>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <input id="tableSearch" class="search" placeholder="Filtrar por pedido, cliente, producto...">
+          <button class="chip-btn active" id="exportCsvBtn2">⇩ Descargar CSV</button>
+        </div>
       </div>
 
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Pedido</th>
+              <th>ID Pedido</th>
               <th>Fecha</th>
               <th>Cliente</th>
               <th>Categoría</th>
               <th>Región</th>
-              <th>Cantidad</th>
-              <th>Precio</th>
-              <th>Descuento</th>
-              <th>Pago</th>
-              <th>Entrega</th>
+              <th>Cant.</th>
+              <th>P. Unitario</th>
+              <th>Desc.</th>
+              <th>Método de Pago</th>
+              <th>Lead Time</th>
               <th>Rating</th>
-              <th>Revenue</th>
+              <th>Ingreso Neto</th>
             </tr>
           </thead>
           <tbody id="dataBody">
-            <tr><td colspan="12" class="empty">Carga el CSV para visualizar los registros.</td></tr>
+            <tr><td colspan="12" class="empty">No hay registros cargados.</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <div class="footer">Universidad de Cuenca · Ingeniería Industrial · E-Commerce Analytics</div>
+    <div class="footer">Universidad de Cuenca · Facultad de Ingeniería · Analítica Industrial 2026</div>
   </main>
 </div>
 
-<div class="modal-overlay" id="aboutModal"><div class="modal-box"><div class="modal-head"><h3>E-Commerce Intelligence Platform</h3><button class="modal-close" id="closeModal">✕</button></div><p>Dashboard interactivo desarrollado para analizar la base de ventas de comercio electrónico mediante indicadores comerciales, experiencia del cliente y desempeño logístico.</p><p>Incluye filtros, KPIs, rankings, visualizaciones, alertas operativas, exportación CSV, búsqueda global, modo oscuro e interfaz bilingüe.</p><p><b>Universidad de Cuenca · Ingeniería Industrial · 2026</b></p></div></div>
-<div class="toast-pro" id="toastPro">✅ Acción completada</div>
+<!-- MODAL ACERCA DE -->
+<div class="modal-overlay" id="aboutModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 style="margin:0">Acerca de la Plataforma</h3>
+      <button class="modal-close" id="closeModal">✕</button>
+    </div>
+    <p style="font-size:13px;line-height:1.6;color:var(--muted)">
+      Plataforma analítica concebida para la integración de técnicas de Control de Calidad e Ingeniería Industrial:
+    </p>
+    <ul style="font-size:12px;line-height:1.7;color:var(--muted);padding-left:20px;">
+      <li><b>Diagrama de Pareto:</b> Identificación del 20% de las categorías que originan el 80% de los ingresos.</li>
+      <li><b>Control de Lead Time:</b> Monitorización de variabilidad y tiempos de entrega que impactan la satisfacción del usuario.</li>
+      <li><b>Elasticidad y Descuentos:</b> Visualización de la influencia de políticas de precios en los pedidos.</li>
+      <li><b>Filtros Reactivos:</b> Segmentación por región, producto, métodos de pago y ventanas temporales.</li>
+    </ul>
+    <p style="font-size:12px;font-weight:bold;margin-top:14px;">Universidad de Cuenca · Ingeniería Industrial</p>
+  </div>
+</div>
+
+<div class="toast-pro" id="toastPro">✅ Mensaje</div>
 
 <script>
-let currentLang = 'es';
+/* =========================================================================
+   ESTADO GLOBAL Y UTILITARIOS
+   ========================================================================= */
 let rawData = [];
 let filteredData = [];
 let charts = {};
 
 const $ = id => document.getElementById(id);
 
-const money = n => new Intl.NumberFormat('en-US',{
-  style:'currency',currency:'USD',maximumFractionDigits:0
+const money = n => new Intl.NumberFormat('en-US', {
+  style: 'currency', currency: 'USD', maximumFractionDigits: 0
 }).format(Number(n || 0));
 
-const money2 = n => new Intl.NumberFormat('en-US',{
-  style:'currency',currency:'USD',maximumFractionDigits:2
+const money2 = n => new Intl.NumberFormat('en-US', {
+  style: 'currency', currency: 'USD', maximumFractionDigits: 2
 }).format(Number(n || 0));
 
 const num = n => new Intl.NumberFormat('es-EC').format(Number(n || 0));
 
-function parseDate(value){
-  if(!value) return null;
-  const p = String(value).trim().split(/[\/\-]/);
-  if(p.length===3 && p[0].length<=2){
-    const [m,d,y]=p.map(Number);
-    return new Date(y,m-1,d);
-  }
-  const d=new Date(value);
-  return isNaN(d)?null:d;
-}
-
-function safe(v){
-  return String(v).replace(/[&<>"']/g,m=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+function safe(v) {
+  return String(v ?? '').replace(/[&<>"']/g, m => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
   }[m]));
 }
 
-function normalize(r){
-  return {
-    order_id:String(r.order_id??''),
-    order_date:String(r.order_date??''),
-    customer_id:String(r.customer_id??''),
-    product_category:String(r.product_category??'').trim(),
-    region:String(r.region??'').trim(),
-    quantity:Number(r.quantity||0),
-    unit_price:Number(r.unit_price||0),
-    discount:Number(r.discount||0),
-    payment_method:String(r.payment_method??'').trim(),
-    delivery_days:Number(r.delivery_days||0),
-    customer_rating:Number(r.customer_rating||0),
-    revenue:Number(r.revenue||0),
-    _date:parseDate(r.order_date)
+function showToast(msg) {
+  const t = $('toastPro');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function parseDate(value) {
+  if (!value) return null;
+  const p = String(value).trim().split(/[\/\-]/);
+  if (p.length === 3 && p[0].length <= 2) {
+    const [d, m, y] = p.map(Number);
+    return new Date(y, m - 1, d);
   }
+  const d = new Date(value);
+  return isNaN(d) ? null : d;
 }
 
-function setOptions(id,values){
-  const el=$(id);
-  const base='<option value="">'+el.options[0].text+'</option>';
-  el.innerHTML=base+[...new Set(values)].filter(Boolean).sort()
-    .map(v=>`<option value="${safe(v)}">${safe(v)}</option>`).join('');
-}
-
-function initData(rows){
-  rawData=rows.filter(x=>x.order_id).map(normalize);
-  filteredData=[...rawData];
-
-  setOptions('categoryFilter',rawData.map(x=>x.product_category));
-  setOptions('regionFilter',rawData.map(x=>x.region));
-  setOptions('paymentFilter',rawData.map(x=>x.payment_method));
-
-  $('dataStatus').textContent=`${num(rawData.length)} registros cargados`;
-  updateAll();
-}
-
-function applyFilters(){
-  const cat=$('categoryFilter').value;
-  const reg=$('regionFilter').value;
-  const pay=$('paymentFilter').value;
-  const from=$('dateFrom').value?new Date($('dateFrom').value+'T00:00:00'):null;
-  const to=$('dateTo').value?new Date($('dateTo').value+'T23:59:59'):null;
-
-  filteredData=rawData.filter(r=>
-    (!cat||r.product_category===cat)&&
-    (!reg||r.region===reg)&&
-    (!pay||r.payment_method===pay)&&
-    (!from||(r._date&&r._date>=from))&&
-    (!to||(r._date&&r._date<=to))
-  );
-  updateAll();
-}
-
-function groupSum(data,key,val='revenue'){
-  return data.reduce((a,r)=>{
-    const k=r[key]||'Sin dato';
-    a[k]=(a[k]||0)+Number(r[val]||0);
-    return a;
-  },{});
-}
-
-function groupCount(data,key){
-  return data.reduce((a,r)=>{
-    const k=r[key]||'Sin dato';
-    a[k]=(a[k]||0)+1;
-    return a;
-  },{});
-}
-
-function topEntry(obj){
-  const entries=Object.entries(obj);
-  return entries.length?entries.sort((a,b)=>b[1]-a[1])[0]:['Sin datos',0];
-}
-
-function destroy(name){ if(charts[name]) charts[name].destroy(); }
-
-function chartBase(){
+function normalize(r) {
+  const qty = Number(r.quantity || 1);
+  const unitP = Number(r.unit_price || 0);
+  const disc = Number(r.discount || 0);
+  const calcRev = Number(r.revenue || (qty * unitP * (1 - disc)));
   return {
-    responsive:true,
-    maintainAspectRatio:false,
-    animation:{duration:650,easing:'easeOutQuart'},
-    plugins:{
-      legend:{labels:{usePointStyle:true,boxWidth:8,color:'#667085',font:{size:10}}},
-      tooltip:{backgroundColor:'#07111F',padding:12,cornerRadius:12}
-    },
-    scales:{
-      x:{grid:{display:false},ticks:{color:'#7F8C99',font:{size:9}}},
-      y:{grid:{color:'rgba(16,24,40,.06)'},ticks:{color:'#7F8C99',font:{size:9}}}
-    }
+    order_id: String(r.order_id ?? ''),
+    order_date: String(r.order_date ?? ''),
+    customer_id: String(r.customer_id ?? ''),
+    product_category: String(r.product_category ?? 'Sin Categoría').trim(),
+    region: String(r.region ?? 'Sin Región').trim(),
+    quantity: qty,
+    unit_price: unitP,
+    discount: disc,
+    payment_method: String(r.payment_method ?? 'Efectivo').trim(),
+    delivery_days: Number(r.delivery_days || 0),
+    customer_rating: Number(r.customer_rating || 0),
+    revenue: calcRev,
+    _date: parseDate(r.order_date)
   };
 }
 
-function updateKPIs(){
-  const revenue=filteredData.reduce((s,x)=>s+x.revenue,0);
-  const orders=new Set(filteredData.map(x=>x.order_id)).size;
-  const ticket=orders?revenue/orders:0;
-  const rating=filteredData.length?filteredData.reduce((s,x)=>s+x.customer_rating,0)/filteredData.length:0;
-  const delivery=filteredData.length?filteredData.reduce((s,x)=>s+x.delivery_days,0)/filteredData.length:0;
-
-  $('kpiRevenue').textContent=money(revenue);
-  $('kpiOrders').textContent=num(orders);
-  $('kpiTicket').textContent=money2(ticket);
-  $('kpiRating').textContent=rating.toFixed(2);
-  $('kpiDelivery').textContent=delivery.toFixed(1)+' días';
-
-  $('heroRevenue').textContent=money(revenue);
-  $('heroOrders').textContent=num(orders);
-  $('heroRating').textContent=rating.toFixed(2);
+/* =========================================================================
+   SOPORTE DE TEMAS
+   ========================================================================= */
+function setTheme(theme) {
+  document.body.setAttribute('data-theme', theme);
+  localStorage.setItem('ucuenca_theme', theme);
+  $('themeSelect').value = theme;
+  updateCharts();
 }
 
-function updateCharts(){
-  const monthly={};
-  filteredData.forEach(r=>{
-    if(!r._date)return;
-    const key=`${r._date.getFullYear()}-${String(r._date.getMonth()+1).padStart(2,'0')}`;
-    monthly[key]=(monthly[key]||0)+r.revenue;
-  });
-  const months=Object.keys(monthly).sort();
+$('themeSelect').addEventListener('change', e => setTheme(e.target.value));
 
-  destroy('revenue');
-  charts.revenue=new Chart($('revenueChart'),{
-    type:'line',
-    data:{
-      labels:months,
-      datasets:[{
-        label:'Revenue',
-        data:months.map(m=>monthly[m]),
-        borderColor:'#0B63B6',
-        backgroundColor:'rgba(11,99,182,.12)',
-        fill:true,
-        tension:.38,
-        borderWidth:2.5,
-        pointRadius:0,
-        pointHoverRadius:5
+/* =========================================================================
+   INICIALIZACIÓN Y FILTRADO DE DATOS
+   ========================================================================= */
+function setOptions(id, values) {
+  const el = $(id);
+  const base = '<option value="">Todas</option>';
+  el.innerHTML = base + [...new Set(values)].filter(Boolean).sort()
+    .map(v => `<option value="${safe(v)}">${safe(v)}</option>`).join('');
+}
+
+function initData(rows) {
+  rawData = rows.filter(x => x.order_id || x.product_category).map(normalize);
+  filteredData = [...rawData];
+
+  setOptions('categoryFilter', rawData.map(x => x.product_category));
+  setOptions('regionFilter', rawData.map(x => x.region));
+  setOptions('paymentFilter', rawData.map(x => x.payment_method));
+
+  $('dataStatus').textContent = `${num(rawData.length)} registros`;
+  updateAll();
+  showToast(`Datos procesados: ${num(rawData.length)} registros.`);
+}
+
+function applyFilters() {
+  const cat = $('categoryFilter').value;
+  const reg = $('regionFilter').value;
+  const pay = $('paymentFilter').value;
+  const q = $('globalSearch').value.toLowerCase().trim();
+  const from = $('dateFrom').value ? new Date($('dateFrom').value + 'T00:00:00') : null;
+  const to = $('dateTo').value ? new Date($('dateTo').value + 'T23:59:59') : null;
+
+  filteredData = rawData.filter(r => {
+    const matchCat = !cat || r.product_category === cat;
+    const matchReg = !reg || r.region === reg;
+    const matchPay = !pay || r.payment_method === pay;
+    const matchDate = (!from || (r._date && r._date >= from)) && (!to || (r._date && r._date <= to));
+    const matchSearch = !q || [r.order_id, r.customer_id, r.product_category, r.region, r.payment_method]
+      .some(field => String(field).toLowerCase().includes(q));
+
+    return matchCat && matchReg && matchPay && matchDate && matchSearch;
+  });
+
+  updateAll();
+}
+
+function groupSum(data, key, val = 'revenue') {
+  return data.reduce((a, r) => {
+    const k = r[key] || 'Sin dato';
+    a[k] = (a[k] || 0) + Number(r[val] || 0);
+    return a;
+  }, {});
+}
+
+function groupCount(data, key) {
+  return data.reduce((a, r) => {
+    const k = r[key] || 'Sin dato';
+    a[k] = (a[k] || 0) + 1;
+    return a;
+  }, {});
+}
+
+/* =========================================================================
+   ACTUALIZACIÓN DE COMPONENTES Y VISTAS
+   ========================================================================= */
+function updateKPIs() {
+  const rev = filteredData.reduce((s, x) => s + x.revenue, 0);
+  const orders = filteredData.length;
+  const ticket = orders ? rev / orders : 0;
+  const rating = orders ? filteredData.reduce((s, x) => s + x.customer_rating, 0) / orders : 0;
+  const delivery = orders ? filteredData.reduce((s, x) => s + x.delivery_days, 0) / orders : 0;
+
+  $('kpiRevenue').textContent = money(rev);
+  $('kpiOrders').textContent = num(orders);$('kpiTicket').textContent = money2(ticket);
+  $('kpiRating').textContent = rating.toFixed(2) + ' ★';$('kpiDelivery').textContent = delivery.toFixed(1) + ' d';
+
+  $('heroRevenue').textContent = money2(rev);
+  $('heroOrders').textContent = num(orders);$('heroRating').textContent = rating.toFixed(2) + ' ★';
+}
+
+function destroyChart(id) {
+  if (charts[id]) {
+    charts[id].destroy();
+    delete charts[id];
+  }
+}
+
+function getChartColors() {
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  return {
+    textColor: isDark ? '#A0B2C6' : '#667085',
+    gridColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'
+  };
+}
+
+function updateCharts() {
+  const cfg = getChartColors();
+
+  // 1. DIAGRAMA DE PARETO (80/20)
+  const catSums = groupSum(filteredData, 'product_category', 'revenue');
+  const sortedCats = Object.entries(catSums).sort((a, b) => b[1] - a[1]);
+  const totalRev = sortedCats.reduce((s, x) => s + x[1], 0);
+
+  let acc = 0;
+  const paretoLabels = [];
+  const paretoValues = [];
+  const paretoPercent = [];
+
+  sortedCats.forEach(([cat, val]) => {
+    paretoLabels.push(cat);
+    paretoValues.push(val);
+    acc += val;
+    paretoPercent.push(totalRev > 0 ? (acc / totalRev) * 100 : 0);
+  });
+
+  const topCats80 = paretoLabels.filter((_, idx) => paretoPercent[idx] <= 85).length || 1;
+  $('paretoInsightText').textContent = totalRev > 0 
+    ? `${topCats80} de ${paretoLabels.length} categorías generan aprox. el 80% del ingreso total.`
+    : 'Sin datos disponibles';
+
+  destroyChart('pareto');
+  if ($('paretoChart')) {
+    charts.pareto = new Chart($('paretoChart'), {
+      data: {
+        labels: paretoLabels,
+        datasets: [
+          {
+            type: 'line',
+            label: '% Acumulado',
+            data: paretoPercent,
+            borderColor: '#C8102E',
+            backgroundColor: '#C8102E',
+            yAxisID: 'y1',
+            borderWidth: 2.5,
+            pointRadius: 4,
+            tension: 0.2
+          },
+          {
+            type: 'bar',
+            label: 'Facturación ($)',
+            data: paretoValues,
+            backgroundColor: 'rgba(11, 99, 182, 0.75)',
+            borderRadius: 6,
+            yAxisID: 'y'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: cfg.textColor, font: { size: 11 } } },
+          tooltip: {
+            callbacks: {
+              label: ctx => ctx.dataset.type === 'line' 
+                ? `% Acumulado: ${ctx.raw.toFixed(1)}%` 
+                : `Ingreso: ${money2(ctx.raw)}`
+            }
+          }
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: cfg.textColor } },
+          y: {
+            type: 'linear',
+            position: 'left',
+            grid: { color: cfg.gridColor },
+            ticks: { color: cfg.textColor, callback: v => money(v) }
+          },
+          y1: {
+            type: 'linear',
+            position: 'right',
+            min: 0,
+            max: 100,
+            grid: { display: false },
+            ticks: { color: cfg.textColor, callback: v => v + '%' }
+          }
+        }
+      }
+    });
+  }
+
+  // 2. TENDENCIA MENSUAL
+  const monthly = {};
+  filteredData.forEach(r => {
+    if (!r._date) return;
+    const k = `${r._date.getFullYear()}-${String(r._date.getMonth() + 1).padStart(2, '0')}`;
+    monthly[k] = (monthly[k] || 0) + r.revenue;
+  });
+  const sortedMonths = Object.keys(monthly).sort();
+
+  destroyChart('revenue');
+  charts.revenue = new Chart($('revenueChart'), {
+    type: 'line',
+    data: {
+      labels: sortedMonths,
+      datasets: [{
+        label: 'Ventas Mensuales',
+        data: sortedMonths.map(m => monthly[m]),
+        borderColor: '#0B63B6',
+        backgroundColor: 'rgba(11,99,182,0.12)',
+        fill: true,
+        tension: 0.35,
+        pointRadius: 3
       }]
     },
-    options:{
-      ...chartBase(),
-      plugins:{
-        ...chartBase().plugins,
-        legend:{display:false},
-        tooltip:{backgroundColor:'#07111F',padding:12,callbacks:{label:c=>money2(c.raw)}}
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: cfg.textColor } },
+        y: { grid: { color: cfg.gridColor }, ticks: { color: cfg.textColor, callback: v => money(v) } }
       }
     }
   });
 
-  const cat=groupSum(filteredData,'product_category');
-  destroy('category');
-  charts.category=new Chart($('categoryChart'),{
-    type:'doughnut',
-    data:{
-      labels:Object.keys(cat),
-      datasets:[{
-        data:Object.values(cat),
-        backgroundColor:['#003B71','#C8102E','#0B63B6','#FF5C75','#5B9BD5','#809CB5'],
-        borderWidth:0,
-        hoverOffset:8
+  // 3. MÉTODOS DE PAGO
+  const payments = groupCount(filteredData, 'payment_method');
+  destroyChart('payment');
+  charts.payment = new Chart($('paymentChart'), {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(payments),
+      datasets: [{
+        data: Object.values(payments),
+        backgroundColor: ['#0B63B6', '#C8102E', '#3A8DDE', '#F59E0B', '#10B981'],
+        borderWidth: 0
       }]
     },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      cutout:'72%',
-      plugins:{
-        legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:8,color:'#667085',font:{size:10}}},
-        tooltip:{backgroundColor:'#07111F',callbacks:{label:c=>`${c.label}: ${money2(c.raw)}`}}
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '68%',
+      plugins: { legend: { position: 'bottom', labels: { color: cfg.textColor, font: { size: 10 } } } }
+    }
+  });
+
+  // 4. VENTAS POR REGIÓN
+  const regions = groupSum(filteredData, 'region', 'revenue');
+  destroyChart('region');
+  charts.region = new Chart($('regionChart'), {
+    type: 'bar',
+    data: {
+      labels: Object.keys(regions),
+      datasets: [{
+        label: 'Ingresos',
+        data: Object.values(regions),
+        backgroundColor: 'rgba(11, 99, 182, 0.85)',
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: cfg.textColor } },
+        y: { grid: { color: cfg.gridColor }, ticks: { color: cfg.textColor, callback: v => money(v) } }
       }
     }
   });
 
-  const reg=groupSum(filteredData,'region');
-  destroy('region');
-  charts.region=new Chart($('regionChart'),{
-    type:'bar',
-    data:{
-      labels:Object.keys(reg),
-      datasets:[{
-        data:Object.values(reg),
-        backgroundColor:['#0B63B6','#1A76C4','#2E87D1','#5A9DDB','#87B7E2'],
-        borderRadius:10,
-        borderSkipped:false
+  // 5. LEAD TIME VS RATING
+  const dr = {};
+  filteredData.forEach(r => {
+    if (!dr[r.delivery_days]) dr[r.delivery_days] = { sum: 0, count: 0 };
+    dr[r.delivery_days].sum += r.customer_rating;
+    dr[r.delivery_days].count++;
+  });
+  const days = Object.keys(dr).map(Number).sort((a, b) => a - b);
+
+  destroyChart('delivery');
+  charts.delivery = new Chart($('deliveryChart'), {
+    type: 'line',
+    data: {
+      labels: days.map(d => `${d}d`),
+      datasets: [{
+        label: 'Rating Promedio',
+        data: days.map(d => dr[d].sum / dr[d].count),
+        borderColor: '#C8102E',
+        backgroundColor: 'rgba(200, 16, 46, 0.1)',
+        tension: 0.3,
+        fill: true,
+        pointRadius: 4
       }]
     },
-    options:{
-      ...chartBase(),
-      plugins:{
-        ...chartBase().plugins,
-        legend:{display:false},
-        tooltip:{backgroundColor:'#07111F',callbacks:{label:c=>money2(c.raw)}}
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: cfg.textColor } },
+        y: { min: 1, max: 5, grid: { color: cfg.gridColor }, ticks: { color: cfg.textColor } }
       }
     }
   });
 
-  const pay=groupCount(filteredData,'payment_method');
-  destroy('payment');
-  charts.payment=new Chart($('paymentChart'),{
-    type:'pie',
-    data:{
-      labels:Object.keys(pay),
-      datasets:[{
-        data:Object.values(pay),
-        backgroundColor:['#003B71','#C8102E','#0B63B6','#F97086'],
-        borderWidth:0,
-        hoverOffset:8
+  // 6. SCATTER: DESCUENTO VS REVENUE
+  destroyChart('scatter');
+  charts.scatter = new Chart($('scatterChart'), {
+    type: 'scatter',
+    data: {
+      datasets: [{
+        label: 'Pedidos',
+        data: filteredData.slice(0, 400).map(r => ({ x: r.discount * 100, y: r.revenue })),
+        backgroundColor: 'rgba(58, 141, 222, 0.5)',
+        pointRadius: 3
       }]
     },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      plugins:{
-        legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:8,color:'#667085',font:{size:10}}},
-        tooltip:{backgroundColor:'#07111F'}
-      }
-    }
-  });
-
-  const dr={};
-  filteredData.forEach(r=>{
-    if(!dr[r.delivery_days])dr[r.delivery_days]={sum:0,n:0};
-    dr[r.delivery_days].sum+=r.customer_rating;
-    dr[r.delivery_days].n++;
-  });
-  const days=Object.keys(dr).map(Number).sort((a,b)=>a-b);
-
-  destroy('delivery');
-  charts.delivery=new Chart($('deliveryChart'),{
-    type:'line',
-    data:{
-      labels:days.map(d=>d+' d'),
-      datasets:[{
-        label:'Rating',
-        data:days.map(d=>dr[d].sum/dr[d].n),
-        borderColor:'#C8102E',
-        backgroundColor:'rgba(200,16,46,.10)',
-        fill:true,
-        tension:.35,
-        pointRadius:2,
-        pointBackgroundColor:'#C8102E'
-      }]
-    },
-    options:{
-      ...chartBase(),
-      plugins:{...chartBase().plugins,legend:{display:false}},
-      scales:{
-        x:{grid:{display:false},ticks:{color:'#7F8C99',font:{size:9}}},
-        y:{min:0,max:5,grid:{color:'rgba(16,24,40,.06)'},ticks:{color:'#7F8C99',font:{size:9}}}
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          title: { display: true, text: 'Descuento aplicado (%)', color: cfg.textColor, font: { size: 10 } },
+          ticks: { color: cfg.textColor },
+          grid: { display: false }
+        },
+        y: {
+          title: { display: true, text: 'Ingreso neto ($)', color: cfg.textColor, font: { size: 10 } },
+          ticks: { color: cfg.textColor, callback: v => money(v) },
+          grid: { color: cfg.gridColor }
+        }
       }
     }
   });
 }
 
-function updateInsights(){
-  if(!filteredData.length){
-    $('mainInsightMetric').textContent='—';
-    $('mainInsightLabel').textContent='Sin datos';
-    $('insightGrid').innerHTML='<div class="insight-item">No existen registros para los filtros seleccionados.</div>';
+function updateInsights() {
+  if (!filteredData.length) {
+    $('mainInsightMetric').textContent = '—';
+    $('mainInsightLabel').textContent = 'Sin datos';$('insightGrid').innerHTML = '<div class="insight-item">No se encontraron registros bajo este criterio.</div>';
     return;
   }
 
-  const topCat=topEntry(groupSum(filteredData,'product_category'));
-  const topReg=topEntry(groupSum(filteredData,'region'));
-  const topPay=topEntry(groupCount(filteredData,'payment_method'));
-  const avgDiscount=filteredData.reduce((s,x)=>s+x.discount,0)/filteredData.length;
-  const avgDelivery=filteredData.reduce((s,x)=>s+x.delivery_days,0)/filteredData.length;
-  const avgRating=filteredData.reduce((s,x)=>s+x.customer_rating,0)/filteredData.length;
+  const catSums = groupSum(filteredData, 'product_category');
+  const topCat = Object.entries(catSums).sort((a, b) => b[1] - a[1])[0] || ['N/A', 0];
 
-  $('mainInsightMetric').textContent=topCat[0];
-  $('mainInsightLabel').textContent='Categoría con mayor revenue';
+  const regSums = groupSum(filteredData, 'region');
+  const topReg = Object.entries(regSums).sort((a, b) => b[1] - a[1])[0] || ['N/A', 0];
 
-  $('insightGrid').innerHTML=`
-    <div class="insight-item"><b>${safe(topCat[0])}</b><br>${money2(topCat[1])} en ingresos.</div>
-    <div class="insight-item"><b>${safe(topReg[0])}</b><br>Región con mayor desempeño.</div>
-    <div class="insight-item"><b>${safe(topPay[0])}</b><br>${num(topPay[1])} pedidos procesados.</div>
-    <div class="insight-item"><b>${(avgDiscount*100).toFixed(1)}%</b><br>Descuento promedio aplicado.</div>
-    <div class="insight-item"><b>${avgDelivery.toFixed(1)} días</b><br>Tiempo medio de entrega.</div>
-    <div class="insight-item"><b>${avgRating.toFixed(2)}/5</b><br>Rating promedio del cliente.</div>
+  const avgDel = filteredData.reduce((s, x) => s + x.delivery_days, 0) / filteredData.length;
+  const avgDisc = filteredData.reduce((s, x) => s + x.discount, 0) / filteredData.length;
+  const avgRate = filteredData.reduce((s, x) => s + x.customer_rating, 0) / filteredData.length;
+
+  $('mainInsightMetric').textContent = topCat[0];$('mainInsightLabel').textContent = 'Categoría líder en facturación';
+
+  $('insightGrid').innerHTML = `
+    <div class="insight-item"><b>${safe(topCat[0])}</b>Aporta ${money2(topCat[1])} en ingresos brutos.</div>
+    <div class="insight-item"><b>${safe(topReg[0])}</b>Zona con mayor desempeño comercial (${money2(topReg[1])}).</div>
+    <div class="insight-item"><b>${avgDel.toFixed(1)} Días de Lead Time</b>Promedio operativo de despacho.</div>
+    <div class="insight-item"><b>${(avgDisc * 100).toFixed(1)}% Descuento Medio</b>Intensidad promocional en pedidos.</div>
+    <div class="insight-item"><b>${avgRate.toFixed(2)} / 5 Estrellas</b>Índice global de satisfacción.</div>
+    <div class="insight-item"><b>Priorización 80/20</b>Revisar compras de las 2 principales categorías.</div>
   `;
 }
 
-function updateTable(){
-  const q=$('tableSearch').value.toLowerCase().trim();
-  const rows=filteredData.filter(r=>{
-    if(!q)return true;
-    return Object.values(r).some(v=>String(v).toLowerCase().includes(q));
-  }).slice(0,250);
+function updateTable() {
+  const q = $('tableSearch').value.toLowerCase().trim();
+  const rows = filteredData.filter(r => {
+    if (!q) return true;
+    return Object.values(r).some(v => String(v).toLowerCase().includes(q));
+  }).slice(0, 150);
 
-  $('dataBody').innerHTML=rows.length?rows.map(r=>`
+  $('dataBody').innerHTML = rows.length ? rows.map(r => `
     <tr>
       <td><b>${safe(r.order_id)}</b></td>
       <td>${safe(r.order_date)}</td>
@@ -1344,344 +1418,174 @@ function updateTable(){
       <td>${safe(r.region)}</td>
       <td>${num(r.quantity)}</td>
       <td>${money2(r.unit_price)}</td>
-      <td>${(r.discount*100).toFixed(0)}%</td>
+      <td>${(r.discount * 100).toFixed(0)}%</td>
       <td><span class="tag red">${safe(r.payment_method)}</span></td>
-      <td>${r.delivery_days} días</td>
+      <td>${r.delivery_days} d</td>
       <td>${r.customer_rating.toFixed(1)} ★</td>
       <td><b>${money2(r.revenue)}</b></td>
     </tr>
-  `).join(''):
-  '<tr><td colspan="12" class="empty">No hay registros para mostrar.</td></tr>';
+  `).join('') : '<tr><td colspan="12" class="empty">No hay datos que coincidan con la búsqueda.</td></tr>';
 }
 
-function updateAll(){
+function updateAll() {
   updateKPIs();
   updateCharts();
   updateInsights();
   updateTable();
 }
 
-$('csvInput').addEventListener('change',e=>{
-  const file=e.target.files[0];
-  if(!file)return;
-  Papa.parse(file,{
-    header:true,
-    dynamicTyping:true,
-    skipEmptyLines:true,
-    complete:r=>initData(r.data),
-    error:e=>alert('No se pudo leer el archivo: '+e.message)
-  });
-});
-
-['categoryFilter','regionFilter','paymentFilter','dateFrom','dateTo']
-.forEach(id=>$(id).addEventListener('change',applyFilters));
-
-$('tableSearch').addEventListener('input',updateTable);
-
-
-
-function showToast(msg){
-  const t=$('toastPro'); t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),1700);
-}
-
-function setLanguage(lang){
-  currentLang=lang;
-  document.documentElement.lang=lang;
-
-  document.querySelectorAll('[data-es][data-en]').forEach(el=>{
-    const value=lang==='es'?el.dataset.es:el.dataset.en;
-
-    if(el.matches('.menu a')){
-      const label=el.querySelector('span:last-child');
-      if(label) label.textContent=value;
-    }else{
-      el.textContent=value;
-    }
-  });
-
-  document.querySelectorAll('[data-placeholder-es][data-placeholder-en]').forEach(el=>{
-    el.placeholder=lang==='es'?el.dataset.placeholderEs:el.dataset.placeholderEn;
-  });
-
-  const langBtn=document.getElementById('langBtn');
-  if(langBtn) langBtn.textContent=lang==='es'?'🌐 ES ▾':'🌐 EN ▾';
-
-  try{ updateDashboard(); }catch(e){}
-}
-
-function exportFilteredCSV(){
-  if(!filteredData.length){showToast(currentLang==='es'?'No hay datos para exportar':'No data to export');return;}
-  const clean=filteredData.map(({_date,...r})=>r);
-  const csv=Papa.unparse(clean);
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='ecommerce_filtrado.csv';a.click();
-  URL.revokeObjectURL(url);
-  showToast(currentLang==='es'?'✅ CSV exportado':'✅ CSV exported');
-}
-
-function updateProSections(){
-  // Revenue vs discount
-  destroyChart('scatter');
-  charts.scatter=new Chart($('scatterChart'),{
-    type:'scatter',
-    data:{datasets:[{data:filteredData.slice(0,900).map(r=>({x:r.discount*100,y:r.revenue})),backgroundColor:'rgba(11,99,182,.45)',pointRadius:3}]},
-    options:{...baseOptions(),plugins:{...baseOptions().plugins,legend:{display:false}},scales:{x:{title:{display:true,text:'Discount %'},grid:{display:false}},y:{title:{display:true,text:'Revenue'},grid:{color:'rgba(16,36,58,.07)'}}}}
-  });
-
-  const rating=filteredData.reduce((a,r)=>{const k=r.product_category||'Sin dato';if(!a[k])a[k]={s:0,n:0};a[k].s+=r.customer_rating;a[k].n++;return a;},{});
-  const ratingAvg=Object.fromEntries(Object.entries(rating).map(([k,v])=>[k,v.s/v.n]));
-  destroyChart('ratingCat');
-  charts.ratingCat=new Chart($('ratingCategoryChart'),{
-    type:'bar',data:{labels:Object.keys(ratingAvg),datasets:[{data:Object.values(ratingAvg),backgroundColor:'#0B63B6',borderRadius:8}]},
-    options:{...baseOptions(),plugins:{...baseOptions().plugins,legend:{display:false}},scales:{x:{grid:{display:false}},y:{min:0,max:5}}}
-  });
-
-  const cats=Object.entries(groupSum(filteredData,'product_category')).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  $('categoryRanking').innerHTML=cats.map((x,i)=>`<div class="rank-item"><div class="rank-no">${i+1}</div><div><strong>${escapeHtml(x[0])}</strong><small>Revenue</small></div><div class="rank-value">${money(x[1])}</div></div>`).join('');
-
-  const regAcc={};
-  filteredData.forEach(r=>{const k=r.region||'Sin dato';if(!regAcc[k])regAcc[k]={s:0,n:0};regAcc[k].s+=r.delivery_days;regAcc[k].n++;});
-  const regAvg=Object.fromEntries(Object.entries(regAcc).map(([k,v])=>[k,v.s/v.n]));
-  destroyChart('deliveryRegion');
-  charts.deliveryRegion=new Chart($('deliveryRegionChart'),{
-    type:'bar',data:{labels:Object.keys(regAvg),datasets:[{data:Object.values(regAvg),backgroundColor:'#C8102E',borderRadius:8}]},
-    options:{...baseOptions(),plugins:{...baseOptions().plugins,legend:{display:false}}}
-  });
-
-  const qty=groupSum(filteredData,'product_category','quantity');
-  destroyChart('qty');
-  charts.qty=new Chart($('quantityChart'),{
-    type:'bar',data:{labels:Object.keys(qty),datasets:[{data:Object.values(qty),backgroundColor:'#3A8DDE',borderRadius:8}]},
-    options:{...baseOptions(),plugins:{...baseOptions().plugins,legend:{display:false}}}
-  });
-
-  const overall=filteredData.length?filteredData.reduce((s,r)=>s+r.delivery_days,0)/filteredData.length:0;
-  const ratingAll=filteredData.length?filteredData.reduce((s,r)=>s+r.customer_rating,0)/filteredData.length:0;
-  const ordered=Object.entries(regAvg).sort((a,b)=>b[1]-a[1]);
-  const slow=ordered[0]||['—',0]; const fast=ordered.at(-1)||['—',0];
-  $('alertList').innerHTML=`
-    <div class="alert-box ${overall>7?'warn':''}"><div class="alert-icon">${overall>7?'⚠':'✓'}</div><div><strong>${currentLang==='es'?'Lead time general':'Overall lead time'}: ${overall.toFixed(1)} d</strong><p>${currentLang==='es'?'Promedio operativo del filtro actual.':'Current filter operational average.'}</p></div></div>
-    <div class="alert-box warn"><div class="alert-icon">!</div><div><strong>${currentLang==='es'?'Región más lenta':'Slowest region'}: ${escapeHtml(slow[0])}</strong><p>${slow[1].toFixed(1)} d</p></div></div>
-    <div class="alert-box"><div class="alert-icon">★</div><div><strong>${currentLang==='es'?'Región más rápida':'Fastest region'}: ${escapeHtml(fast[0])}</strong><p>${fast[1].toFixed(1)} d</p></div></div>
-    <div class="alert-box ${ratingAll<3?'bad':''}"><div class="alert-icon">☺</div><div><strong>Rating ${ratingAll.toFixed(2)}/5</strong><p>${currentLang==='es'?'Satisfacción media del cliente.':'Average customer satisfaction.'}</p></div></div>`;
-}
-
-function setQuickRange(days){
-  document.querySelectorAll('[data-range]').forEach(b=>b.classList.toggle('active',b.dataset.range===String(days)));
-  if(days==='all'){$('dateFrom').value='';$('dateTo').value='';applyFilters();return;}
-  const dates=rawData.map(r=>r._date).filter(Boolean).sort((a,b)=>a-b);if(!dates.length)return;
-  const max=dates.at(-1),min=new Date(max);min.setDate(min.getDate()-Number(days));
-  $('dateFrom').value=min.toISOString().slice(0,10);$('dateTo').value=max.toISOString().slice(0,10);applyFilters();
-}
-
-// Enhance original update function
-const originalUpdateDashboard=updateDashboard;
-updateDashboard=function(){originalUpdateDashboard();updateProSections();};
-
-$('globalSearch').addEventListener('input',()=>{
-  const q=$('globalSearch').value.toLowerCase().trim();
-  const c=$('categoryFilter').value,r=$('regionFilter').value,p=$('paymentFilter').value;
-  const from=$('dateFrom').value?new Date($('dateFrom').value+'T00:00:00'):null;
-  const to=$('dateTo').value?new Date($('dateTo').value+'T23:59:59'):null;
-  filteredData=rawData.filter(x=>{
-    const hit=!q||[x.order_id,x.customer_id,x.product_category,x.region,x.payment_method].some(v=>String(v).toLowerCase().includes(q));
-    return hit&&(!c||x.product_category===c)&&(!r||x.region===r)&&(!p||x.payment_method===p)&&(!from||(x._date&&x._date>=from))&&(!to||(x._date&&x._date<=to));
-  }); updateDashboard();
-});
-
-document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',()=>setQuickRange(b.dataset.range)));
-$('resetAllBtn').addEventListener('click',()=>{$('categoryFilter').value='';$('regionFilter').value='';$('paymentFilter').value='';$('dateFrom').value='';$('dateTo').value='';$('globalSearch').value='';$('tableSearch').value='';filteredData=[...rawData];updateDashboard();showToast(currentLang==='es'?'Filtros restablecidos':'Filters reset');});
-$('exportCsvBtn').addEventListener('click',exportFilteredCSV);$('exportCsvBtn2').addEventListener('click',exportFilteredCSV);
-
-function byId(id){ return document.getElementById(id); }
-
-function safeOn(id,event,handler){
-  const el=byId(id);
-  if(el) el.addEventListener(event,handler);
-}
-
-function toggleDrop(id){
-  const menu=byId(id);
-  if(!menu) return;
-  document.querySelectorAll('.drop-menu').forEach(m=>{
-    if(m.id!==id) m.classList.remove('show');
-  });
-  menu.classList.toggle('show');
-}
-
-function refreshThemeCharts(){
-  try{ updateDashboard(); }catch(e){}
-  try{ updateAdvanced(); }catch(e){}
-  try{ updateLogistics(); }catch(e){}
-}
-
-safeOn('themeBtn','click',()=>{
-  document.body.classList.toggle('dark');
-  const btn=byId('themeBtn');
-  if(btn) btn.textContent=document.body.classList.contains('dark')?'☀️':'🌙';
-  localStorage.setItem('ucuenTheme',document.body.classList.contains('dark')?'dark':'light');
-  refreshThemeCharts();
-});
-
-safeOn('langBtn','click',e=>{
-  e.stopPropagation();
-  toggleDrop('langMenu');
-});
-safeOn('notifBtn','click',e=>{
-  e.stopPropagation();
-  toggleDrop('notifMenu');
-});
-safeOn('profileBtn','click',e=>{
-  e.stopPropagation();
-  toggleDrop('profileMenu');
-});
-
-document.querySelectorAll('[data-language]').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    setLanguage(btn.dataset.language);
-    const menu=byId('langMenu');
-    if(menu) menu.classList.remove('show');
-    localStorage.setItem('ucuenLang',btn.dataset.language);
-  });
-});
-
-safeOn('profileAbout','click',()=>{
-  const menu=byId('profileMenu');
-  if(menu) menu.classList.remove('show');
-  const target=document.querySelector('#about');
-  if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
-});
-
-safeOn('profileSettings','click',()=>{
-  const menu=byId('profileMenu');
-  if(menu) menu.classList.remove('show');
-  if(typeof showToast==='function'){
-    showToast(currentLang==='es'?'⚙ Usa 🌙 para modo oscuro y 🌐 para idioma':'⚙ Use 🌙 for dark mode and 🌐 for language');
-  }
-});
-
-safeOn('globalSearch','input',()=>{
-  if(typeof applyFilters==='function') applyFilters();
-});
-
-document.querySelectorAll('.menu a').forEach(link=>{
-  link.addEventListener('click',e=>{
-    e.preventDefault();
-    document.querySelectorAll('.menu a').forEach(a=>a.classList.remove('active'));
-    link.classList.add('active');
-    const target=document.querySelector(link.getAttribute('href'));
-    if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
-  });
-});
-
-const observerSections=[...document.querySelectorAll('section[id]')];
-if('IntersectionObserver' in window){
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        const link=document.querySelector(`.menu a[href="#${entry.target.id}"]`);
-        if(link){
-          document.querySelectorAll('.menu a').forEach(a=>a.classList.remove('active'));
-          link.classList.add('active');
-        }
-      }
-    });
-  },{rootMargin:'-35% 0px -55% 0px',threshold:0});
-  observerSections.forEach(s=>obs.observe(s));
-}
-
-safeOn('aboutBtn','click',()=>byId('aboutModal')?.classList.add('show'));
-safeOn('closeModal','click',()=>byId('aboutModal')?.classList.remove('show'));
-safeOn('aboutModal','click',e=>{
-  if(e.target===byId('aboutModal')) byId('aboutModal').classList.remove('show');
-});
-
-safeOn('resetAllBtn','click',()=>{
-  if(byId('categoryFilter')) byId('categoryFilter').value='';
-  if(byId('regionFilter')) byId('regionFilter').value='';
-  if(byId('paymentFilter')) byId('paymentFilter').value='';
-  if(byId('dateFrom')) byId('dateFrom').value='';
-  if(byId('dateTo')) byId('dateTo').value='';
-  if(byId('globalSearch')) byId('globalSearch').value='';
-  if(byId('tableSearch')) byId('tableSearch').value='';
-  filteredData=[...rawData];
-  try{ updateDashboard(); }catch(e){}
-  document.querySelectorAll('.chip-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelector('.chip-btn[data-range="all"]')?.classList.add('active');
-  if(typeof showToast==='function') showToast(currentLang==='es'?'↻ Filtros restablecidos':'↻ Filters reset');
-});
-
-document.querySelectorAll('.chip-btn[data-range]').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.chip-btn[data-range]').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const range=btn.dataset.range;
-    if(range==='all'){
-      if(byId('dateFrom')) byId('dateFrom').value='';
-      if(byId('dateTo')) byId('dateTo').value='';
-    }else{
-      const dates=rawData.map(x=>x._date).filter(Boolean).sort((a,b)=>a-b);
-      if(dates.length){
-        const max=new Date(dates.at(-1));
-        const min=new Date(max);
-        min.setDate(min.getDate()-Number(range));
-        if(byId('dateFrom')) byId('dateFrom').value=min.toISOString().slice(0,10);
-        if(byId('dateTo')) byId('dateTo').value=max.toISOString().slice(0,10);
-      }
-    }
-    if(typeof applyFilters==='function') applyFilters();
-  });
-});
-
-function exportFilteredCSV(){
-  if(!filteredData.length){
-    if(typeof showToast==='function') showToast(currentLang==='es'?'No hay datos para exportar':'No data to export');
+/* =========================================================================
+   EXPORTACIÓN CSV Y GENERADOR DEMO
+   ========================================================================= */
+function exportCSV() {
+  if (!filteredData.length) {
+    showToast('No existen registros para exportar.');
     return;
   }
-  const clean=filteredData.map(({_date,...rest})=>rest);
-  const csv=Papa.unparse(clean);
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download='ecommerce_filtrado.csv';
+  const clean = filteredData.map(({ _date, ...rest }) => rest);
+  const csv = Papa.unparse(clean);
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `industrial_analytics_export_${new Date().toISOString().slice(0,10)}.csv`;
   document.body.appendChild(a);
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
-  if(typeof showToast==='function') showToast(currentLang==='es'?'✅ CSV exportado':'✅ CSV exported');
+  showToast('✅ CSV descargado exitosamente');
 }
 
-safeOn('exportCsvBtn','click',exportFilteredCSV);
-safeOn('exportCsvBtn2','click',exportFilteredCSV);
+function generarDemoData() {
+  const categorias = ['Electrónica', 'Hogar y Cocina', 'Ropa e Indumentaria', 'Herramientas Industriales', 'Alimentos Procesados', 'Juguetes'];
+  const regiones = ['Azuay', 'Pichincha', 'Guayas', 'Manabí', 'Tungurahua', 'Loja'];
+  const pagos = ['Transferencia Bancaria', 'Tarjeta de Crédito', 'Efectivo contra entrega', 'PayPal'];
+  
+  const demo = [];
+  const start = new Date(2025, 0, 1).getTime();
+  const end = new Date(2026, 8, 1).getTime();
 
-document.addEventListener('click',e=>{
-  if(!e.target.closest('.dropdown')){
-    document.querySelectorAll('.drop-menu').forEach(m=>m.classList.remove('show'));
+  for (let i = 1; i <= 600; i++) {
+    const d = new Date(start + Math.random() * (end - start));
+    const qty = Math.floor(Math.random() * 8) + 1;
+    const unitPrice = parseFloat((Math.random() * 120 + 5).toFixed(2));
+    const disc = Math.random() > 0.6 ? parseFloat((Math.random() * 0.25).toFixed(2)) : 0;
+    const delivery = Math.floor(Math.random() * 9) + 1;
+    const rating = Math.max(1, Math.min(5, Math.round(5.5 - (delivery * 0.35) + (Math.random() * 1.5))));
+
+    demo.push({
+      order_id: `PED-${1000 + i}`,
+      order_date: d.toISOString().slice(0, 10),
+      customer_id: `CLI-${2000 + (i % 120)}`,
+      product_category: categorias[Math.floor(Math.random() * categorias.length)],
+      region: regiones[Math.floor(Math.random() * regiones.length)],
+      quantity: qty,
+      unit_price: unitPrice,
+      discount: disc,
+      payment_method: pagos[Math.floor(Math.random() * pagos.length)],
+      delivery_days: delivery,
+      customer_rating: rating,
+      revenue: parseFloat((qty * unitPrice * (1 - disc)).toFixed(2))
+    });
   }
+
+  $('csvFileName').textContent = 'Base Demo Generada (600 reg.)';
+  initData(demo);
+}
+
+/* =========================================================================
+   MANEJO DE EVENTOS (LISTENERS SEGUROS)
+   ========================================================================= */
+$('csvInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  $('csvFileName').textContent = file.name;
+  Papa.parse(file, {
+    header: true,
+    dynamicTyping: true,
+    skipEmptyLines: true,
+    complete: r => initData(r.data),
+    error: err => alert('Error al procesar el archivo CSV: ' + err.message)
+  });
 });
 
-const savedTheme=localStorage.getItem('ucuenTheme');
-if(savedTheme==='dark'){
-  document.body.classList.add('dark');
-  if(byId('themeBtn')) byId('themeBtn').textContent='☀️';
-}
+['categoryFilter', 'regionFilter', 'paymentFilter', 'dateFrom', 'dateTo']
+  .forEach(id => $(id).addEventListener('change', applyFilters));
 
-const savedLang=localStorage.getItem('ucuenLang');
-if(savedLang==='en') setLanguage('en');
+$('globalSearch').addEventListener('input', applyFilters);$('tableSearch').addEventListener('input', updateTable);
+$('exportCsvBtn').addEventListener('click', exportCSV);$('exportCsvBtn2').addEventListener('click', exportCSV);
 
-fetch('ecommerce_sales_analytics_5000.csv')
-  .then(r=>{if(!r.ok) throw new Error(); return r.text();})
-  .then(text=>{
-    const result=Papa.parse(text,{header:true,dynamicTyping:true,skipEmptyLines:true});
-    initData(result.data);
-  })
-  .catch(()=>{
-    const status=byId('dataStatus');
-    if(status) status.textContent=currentLang==='es'?'Selecciona tu CSV':'Select your CSV';
+$('resetAllBtn').addEventListener('click', () => {$('categoryFilter').value = '';
+  $('regionFilter').value = '';$('paymentFilter').value = '';
+  $('dateFrom').value = '';$('dateTo').value = '';
+  $('globalSearch').value = '';$('tableSearch').value = '';
+  document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.chip-btn[data-range="all"]').classList.add('active');
+  filteredData = [...rawData];
+  updateAll();
+  showToast('Filtros restablecidos');
+});
+
+document.querySelectorAll('[data-range]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.chip-btn[data-range]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const range = btn.dataset.range;
+    if (range === 'all') {
+      $('dateFrom').value = '';$('dateTo').value = '';
+    } else {
+      const dates = rawData.map(x => x._date).filter(Boolean).sort((a, b) => a - b);
+      if (dates.length) {
+        const max = new Date(dates.at(-1));
+        const min = new Date(max);
+        min.setDate(min.getDate() - Number(range));
+        $('dateFrom').value = min.toISOString().slice(0, 10);$('dateTo').value = max.toISOString().slice(0, 10);
+      }
+    }
+    applyFilters();
   });
+});
+
+// Navegación suave
+$('btnScrollPareto').addEventListener('click', () => $('pareto-sec').scrollIntoView({ behavior: 'smooth' }));$('btnScrollData').addEventListener('click', () => $('datos').scrollIntoView({ behavior: 'smooth' }));$('btnGenerarDemo').addEventListener('click', generarDemoData);
+
+// Modal
+$('aboutBtn').addEventListener('click', () => $('aboutModal').classList.add('show'));$('closeModal').addEventListener('click', () => $('aboutModal').classList.remove('show'));$('aboutModal').addEventListener('click', e => {
+  if (e.target === $('aboutModal'))$('aboutModal').classList.remove('show');
+});
+
+// Menú activo según scroll
+document.querySelectorAll('.menu a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelectorAll('.menu a').forEach(el => el.classList.remove('active'));
+    a.classList.add('active');
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Carga inicial
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('ucuenca_theme') || 'light';
+  setTheme(saved);
+
+  // Intentar cargar CSV local o datos demo
+  fetch('ecommerce_sales_analytics_5000.csv')
+    .then(r => {
+      if (!r.ok) throw new Error('Archivo local no encontrado');
+      return r.text();
+    })
+    .then(text => {
+      const parsed = Papa.parse(text, { header: true, dynamicTyping: true, skipEmptyLines: true });
+      initData(parsed.data);
+    })
+    .catch(() => {
+      // Si no existe el archivo local en el servidor, cargar dataset de demostración inmediato
+      generarDemoData();
+    });
+});
 </script>
+
 </body>
 </html>
